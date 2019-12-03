@@ -18,6 +18,10 @@ branches:
   only:
     - master
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 matrix:
   fast_finish: true
   include:

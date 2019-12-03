@@ -18,10 +18,10 @@ branches:
   only:
     - master
 
-# cache:
-#   directories:
-#     - $HOME/.composer/cache
-#     - ./vendor
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - ./vendor
 
 matrix:
   fast_finish: true

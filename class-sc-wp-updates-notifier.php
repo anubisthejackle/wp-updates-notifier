@@ -323,12 +323,12 @@ if ( ! class_exists( 'SC_WP_Updates_Notifier' ) ) {
 						$message    .= "\t" . sprintf( __( 'Details: %s', 'wp-updates-notifier' ), $data->url ) . "\n";
 						$message    .= "\t" . sprintf( __( 'Changelog: %1$s%2$s', 'wp-updates-notifier' ), $data->url, 'changelog/' ) . "\n";
 						if ( isset( $info->tested ) && version_compare( $info->tested, $wp_version, '>=' ) ) {
-							$compat = sprintf( __( 'Compatibility with WordPress %1$s: 100%% (according to its author)' ), $cur_wp_version );
+							$compat = sprintf( __( 'Compatibility with WordPress %1$s: 100%% (according to its author)', class-sc-wp-updates-notifier ), $cur_wp_version );
 						} elseif ( isset( $info->compatibility[ $wp_version ][ $data->new_version ] ) ) {
 							$compat = $info->compatibility[ $wp_version ][ $data->new_version ];
-							$compat = sprintf( __( 'Compatibility with WordPress %1$s: %2$d%% (%3$d "works" votes out of %4$d total)' ), $wp_version, $compat[0], $compat[2], $compat[1] );
+							$compat = sprintf( __( 'Compatibility with WordPress %1$s: %2$d%% (%3$d "works" votes out of %4$d total)', class-sc-wp-updates-notifier ), $wp_version, $compat[0], $compat[2], $compat[1] );
 						} else {
-							$compat = sprintf( __( 'Compatibility with WordPress %1$s: Unknown' ), $wp_version );
+							$compat = sprintf( __( 'Compatibility with WordPress %1$s: Unknown', class-sc-wp-updates-notifier ), $wp_version );
 						}
 						$message                               .= "\t" . sprintf( __( 'Compatibility: %s', 'wp-updates-notifier' ), $compat ) . "\n";
 						$settings['notified']['plugin'][ $key ] = $data->new_version; // set plugin version we are notifying about

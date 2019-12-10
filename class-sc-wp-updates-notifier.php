@@ -685,7 +685,7 @@ if ( ! class_exists( 'SC_WP_Updates_Notifier' ) ) {
 				add_settings_error( 'sc_wpun_settings_main_hide_updates', 'sc_wpun_settings_main_hide_updates_error', __( 'Invalid hide updates value entered', 'wp-updates-notifier' ), 'error' );
 			}
 
-			if ( wp_verify_nonce( $_POST['_wpnonce'], 'sc_wpun_update_settings' ) }
+			if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'sc_wpun_update_settings' ) ) {
 				if ( isset( $_POST['submitwithemail'] ) ) {
 					add_filter( 'pre_set_transient_settings_errors', array( $this, 'send_test_email' ) );
 				}

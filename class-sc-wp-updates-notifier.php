@@ -588,6 +588,7 @@ if ( ! class_exists( 'SC_WP_Updates_Notifier' ) ) {
 					settings_fields( 'sc_wpun_settings' );
 					do_settings_sections( 'wp-updates-notifier' );
 					?>
+					<?php wp_nonce_field( 'sc_wpun_update_settings' ); ?>
 					<p>&nbsp;</p>
 					<input class="button-primary" name="Submit" type="submit" value="<?php esc_html_e( 'Save settings', 'wp-updates-notifier' ); ?>" />
 					<input class="button" name="submitwithemail" type="submit" value="<?php esc_html_e( 'Save settings with test email', 'wp-updates-notifier' ); ?>" />
@@ -684,8 +685,10 @@ if ( ! class_exists( 'SC_WP_Updates_Notifier' ) ) {
 				add_settings_error( 'sc_wpun_settings_main_hide_updates', 'sc_wpun_settings_main_hide_updates_error', __( 'Invalid hide updates value entered', 'wp-updates-notifier' ), 'error' );
 			}
 
-			if ( isset( $_POST['submitwithemail'] ) ) {
-				add_filter( 'pre_set_transient_settings_errors', array( $this, 'send_test_email' ) );
+			if ( wp_verify_nonce( $_POST['_wpnonce'], 'sc_wpun_update_settings' ) }
+				if ( isset( $_POST['submitwithemail'] ) ) {
+					add_filter( 'pre_set_transient_settings_errors', array( $this, 'send_test_email' ) );
+				}
 			}
 
 			if ( isset( $input['cron_method'] ) && in_array( $input['cron_method'], array( 'wordpress', 'other' ) ) ) {

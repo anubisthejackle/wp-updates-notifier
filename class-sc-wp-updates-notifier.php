@@ -437,7 +437,9 @@ if ( ! class_exists( 'SC_WP_Updates_Notifier' ) ) {
 			add_filter( 'wp_mail_from', array( $this, 'sc_wpun_wp_mail_from' ) ); // add from filter
 			add_filter( 'wp_mail_from_name', array( $this, 'sc_wpun_wp_mail_from_name' ) ); // add from name filter
 			add_filter( 'wp_mail_content_type', array( $this, 'sc_wpun_wp_mail_content_type' ) ); // add content type filter
+			// phpcs:disable WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail
 			wp_mail( $settings['notify_to'], apply_filters( 'sc_wpun_email_subject', $subject ), apply_filters( 'sc_wpun_email_content', $message ) ); // send email
+			// phpcs:enable
 			remove_filter( 'wp_mail_from', array( $this, 'sc_wpun_wp_mail_from' ) ); // remove from filter
 			remove_filter( 'wp_mail_from_name', array( $this, 'sc_wpun_wp_mail_from_name' ) ); // remove from name filter
 			remove_filter( 'wp_mail_content_type', array( $this, 'sc_wpun_wp_mail_content_type' ) ); // remove content type filter
@@ -513,11 +515,11 @@ if ( ! class_exists( 'SC_WP_Updates_Notifier' ) ) {
 		public function sc_wpun_check() {
 			$options = $this->get_set_options( self::OPT_FIELD ); // get settings
 
-			// @codingStandardsIgnoreStart WordPress.Security.NonceVerification.Recommended
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended
 			if ( ! isset( $_GET['sc_wpun_key'] ) || $options['security_key'] !== $_GET['sc_wpun_key'] || 'other' !== $options['cron_method'] ) {
 				return;
 			}
-			// @codingStandardsIgnoreEnd WordPress.Security.NonceVerification.Recommended
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 			$this->do_update_check();
 

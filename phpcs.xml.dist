@@ -147,8 +147,4 @@
 		<severity>0</severity>
 	</rule>
 
-	<rule ref="WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail">
-		<serverity>0</serverity>
-	</rule>
-
 </ruleset>

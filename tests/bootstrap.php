@@ -1,9 +1,4 @@
 <?php
-/**
- * @bootstrap.php
- * Manually load the plugin for tests.
- @package
- */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 if ( ! $_tests_dir ) {

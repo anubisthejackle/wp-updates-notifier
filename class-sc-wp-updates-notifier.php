@@ -7,7 +7,7 @@
  *
  * @link    https://github.com/l3rady/wp-updates-notifier
  * @since   1.5.0
- * @package WP_Plugin
+ * @package SC_WP_Updates_Notifier
  */
 
 /*

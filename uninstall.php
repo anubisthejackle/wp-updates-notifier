@@ -1,5 +1,16 @@
 <?php
 /**
+ * Uninstall function for plugin.
+ *
+ * This file is read by WordPress to generate the plugin information in the
+ * admin panel.
+ *
+ * @link    https://github.com/l3rady/wp-updates-notifier
+ * @since   1.5.0
+ * @package SC_WP_Updates_Notifier
+ */
+
+/**
 Copyright 2015 Scott Cariss (email:scott@l3rady.com)
 
 This program is free software; you can redistribute it and/or modify

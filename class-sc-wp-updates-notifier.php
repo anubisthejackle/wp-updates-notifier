@@ -245,7 +245,12 @@ if ( ! class_exists( 'SC_WP_Updates_Notifier' ) ) {
 		public function do_update_check() {
 			$options      = $this->get_set_options( self::OPT_FIELD ); // get settings
 			$message      = ''; // start with a blank message
-			$core_updated = $this->core_update_check( $message ); // check the WP core for updates
+			
+			if ( 0 !== $options['notify_automatic'] ) { // should we notify about core updates?
+				$core_updated = $this->core_update_check( $message ); // check the WP core for updates
+			} else {
+				$core_updated = false; // no core updates
+			}
 			if ( 0 !== $options['notify_plugins'] ) { // are we to check for plugin updates?
 				$plugins_updated = $this->plugins_update_check( $message, $options['notify_plugins'] ); // check for plugin updates
 			} else {

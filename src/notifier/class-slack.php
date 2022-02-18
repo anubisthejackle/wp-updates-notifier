@@ -5,9 +5,11 @@
 
 namespace Notifier\Notifier;
 
-class Slack {
+use Notifier\Contracts\Notifier;
 
-	const MARKUP_VARS_SLACK = array(
+class Slack implements Notifier {
+
+	private $markup_vars = [
 		'i_start'     => '_',
 		'i_end'       => '_',
 		'line_break'  => '
@@ -17,25 +19,25 @@ class Slack {
 		'link_end'    => '>',
 		'b_start'     => '*',
 		'b_end'       => '*',
-	);
+	];
 
 	/**
 	 * Send a test slack message.
 	 *
 	 * @return void
 	 */
-	public function send_test_slack( $markup_vars ) {
-		$reference_text = $markup_vars['line_break']
-		. $markup_vars['b_start'] . esc_html( get_bloginfo() ) . $markup_vars['b_end'] . ' - '
-		. $markup_vars['link_start'] . esc_url( home_url() ) . $markup_vars['link_middle']
-		. esc_url( home_url() ) . $markup_vars['link_end'];
+	public function send_test(): void {
+		$reference_text = $this->markup_vars['line_break']
+		. $this->markup_vars['b_start'] . esc_html( get_bloginfo() ) . $this->markup_vars['b_end'] . ' - '
+		. $this->markup_vars['link_start'] . esc_url( home_url() ) . $this->markup_vars['link_middle']
+		. esc_url( home_url() ) . $this->markup_vars['link_end'];
 
-		$this->send_slack_message(
+		$this->send_message(
 			sprintf(
 				__( 'This is a test message from WP Updates Notifier. %s', 'wp-updates-notifier' ),
 				$reference_text
 			)
-			);
+		);
 	}
 
 	/**
@@ -45,7 +47,7 @@ class Slack {
 	 *
 	 * @return bool Success or failure.
 	 */
-	public function send_slack_message( $message ) {
+	public function send_message( string $message ): bool {
 		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings
 
 		/**

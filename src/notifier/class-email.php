@@ -5,9 +5,11 @@
 
 namespace Notifier\Notifier;
 
-class Email {
+use Notifier\Contracts\Notifier;
 
-	const MARKUP_VARS_EMAIL = array(
+class Email implements Notifier {
+
+	private $markup_vars = [
 		'i_start'     => '<i>',
 		'i_end'       => '</i>',
 		'line_break'  => '<br>',
@@ -16,7 +18,7 @@ class Email {
 		'link_end'    => '</a>',
 		'b_start'     => '<b>',
 		'b_end'       => '</b>',
-	);
+	];
 
 	/**
 	 * Prepare the message.
@@ -84,11 +86,11 @@ class Email {
 	 *
 	 * @return void
 	 */
-	public function send_test_email( $markup_vars ) {
-		$reference_text = $markup_vars['line_break']
-		. $markup_vars['b_start'] . esc_html( get_bloginfo() ) . $markup_vars['b_end'] . ' - '
-		. $markup_vars['link_start'] . esc_url( home_url() ) . $markup_vars['link_middle']
-		. esc_url( home_url() ) . $markup_vars['link_end'];
+	public function send_test(): void {
+		$reference_text = $this->markup_vars['line_break']
+		. $this->markup_vars['b_start'] . esc_html( get_bloginfo() ) . $this->markup_vars['b_end'] . ' - '
+		. $this->markup_vars['link_start'] . esc_url( home_url() ) . $this->markup_vars['link_middle']
+		. esc_url( home_url() ) . $this->markup_vars['link_end'];
 
 		$this->send_email_message(
 			sprintf(

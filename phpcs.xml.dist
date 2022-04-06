@@ -4,21 +4,20 @@
 
   <!-- Include Alley Rules -->
   <rule ref="Alley-Interactive">
-	<exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
-	<exclude name="Squiz.Commenting.FunctionComment.Missing" />
-	<exclude name="Squiz.Commenting.ClassComment.Missing" />
-	<exclude name="Squiz.Commenting.VariableComment.Missing" />
-	<exclude name="Squiz.Commenting.FileComment.Missing" />
-	<exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
-	<exclude name="Squiz.Commenting.FunctionComment.ExtraParamComment" />
-	<exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound" />
-	<exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound" />
-	<exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound" />
-	<exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
-	<exclude name="WordPressVIPMinimum.Files.IncludingFile.UsingVariable" />
-	<exclude name="WordPressVIPMinimum.Security.ProperEscapingFunction.htmlAttrNotByEscHTML" />
-	<exclude name="WordPressVIPMinimum.Security.ProperEscapingFunction.notAttrEscAttr" />
-	<exclude name="VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable" />
+    <exclude name="Squiz.Commenting.FunctionComment.Missing" />
+    <exclude name="Squiz.Commenting.ClassComment.Missing" />
+    <exclude name="Squiz.Commenting.VariableComment.Missing" />
+    <exclude name="Squiz.Commenting.FileComment.Missing" />
+    <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
+    <exclude name="Squiz.Commenting.FunctionComment.ExtraParamComment" />
+    <exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound" />
+    <exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound" />
+    <exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound" />
+    <exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
+    <exclude name="WordPressVIPMinimum.Files.IncludingFile.UsingVariable" />
+    <exclude name="WordPressVIPMinimum.Security.ProperEscapingFunction.htmlAttrNotByEscHTML" />
+    <exclude name="WordPressVIPMinimum.Security.ProperEscapingFunction.notAttrEscAttr" />
+    <exclude name="VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable" />
   </rule>
 
   <!-- Set the text domain for i18n. -->
@@ -41,6 +40,8 @@
     s flag: Show sniff codes in all reports.
   -->
   <arg value="ps" />
+
+  <file>.</file>
 
   <!-- Strip the filepaths down to the relevant bit. -->
   <arg name="basepath" value="./" />

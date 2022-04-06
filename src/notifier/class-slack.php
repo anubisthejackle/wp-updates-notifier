@@ -1,6 +1,8 @@
 <?php
 /**
  * Notifier class for sending Slack notifications.
+ *
+ * @package wp-updates-notifier
  */
 
 namespace Notifier\Notifier;

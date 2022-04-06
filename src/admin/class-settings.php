@@ -1,6 +1,8 @@
 <?php
 /**
  * Class for the WP Updates Notifier settings page.
+ *
+ * @package wp-updates-notifier
  */
 
 namespace Notifier\Admin;

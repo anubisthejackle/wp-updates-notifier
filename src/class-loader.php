@@ -2,7 +2,7 @@
 /**
  * Main loader file for WP Updates Notifier.
  *
- * @package Notifier
+ * @package wp-updates-notifier
  */
 
 namespace Notifier;

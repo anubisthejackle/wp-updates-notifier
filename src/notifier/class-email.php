@@ -1,6 +1,8 @@
 <?php
 /**
  * Notifier class for sending Email notifications.
+ *
+ * @package wp-updates-notifier
  */
 
 namespace Notifier\Notifier;

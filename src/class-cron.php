@@ -1,6 +1,8 @@
 <?php
 /**
  * Class for the handling notifications around plugins.
+ *
+ * @package wp-updates-notifier
  */
 
 namespace Notifier;

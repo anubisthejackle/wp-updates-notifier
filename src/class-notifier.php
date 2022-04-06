@@ -1,6 +1,8 @@
 <?php
 /**
  * The main notifier class. This class calls out to all the individual notifier classes.
+ *
+ * @package wp-updates-notifier
  */
 
 namespace Notifier;

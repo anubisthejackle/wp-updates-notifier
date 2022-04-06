@@ -35,7 +35,6 @@ class Email implements Notifier {
 	 * Prepare the message.
 	 *
 	 * @param array $updates Array of all of the updates to notifiy about.
-	 * @param array $markup_vars Array of the markup characters to use.
 	 *
 	 * @return string Message to be sent.
 	 */

@@ -7,6 +7,10 @@
 
 namespace Notifier\Admin;
 
+/**
+ * The Settings class manages creating the settings page, menu items,
+ * and maintaining the actual settings submissions.
+ */
 class Settings {
 	const OPT_FIELD         = 'sc_wpun_settings';
 	const OPT_VERSION_FIELD = 'sc_wpun_settings_ver';

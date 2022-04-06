@@ -7,6 +7,9 @@
 
 namespace Notifier;
 
+/**
+ * The Themes class manages checking for theme updates.
+ */
 class Themes {
 
 	/**

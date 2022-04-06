@@ -11,6 +11,10 @@ use Notifier\Contracts\Notifier as NotifierContract;
 use Notifier\Notifier\Email;
 use Notifier\Notifier\Slack;
 
+/**
+ * The Notifier class is the root of the notification logic. It loads, and executes,
+ * the Notifier extensions.
+ */
 class Notifier {
 
 	/**

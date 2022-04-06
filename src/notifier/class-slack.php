@@ -9,6 +9,9 @@ namespace Notifier\Notifier;
 
 use Notifier\Contracts\Notifier;
 
+/**
+ * The Slack notifier extension handles notifications via Slack.
+ */
 class Slack implements Notifier {
 
 	private $markup_vars = [

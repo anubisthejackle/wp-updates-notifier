@@ -9,6 +9,9 @@ namespace Notifier;
 
 use Notifier\Admin\Settings;
 
+/**
+ * The Loader class is the plugin's kernel.
+ */
 class Loader {
 
 	/**

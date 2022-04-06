@@ -7,6 +7,9 @@
 
 namespace Notifier;
 
+/**
+ * The Cron class manages the scheduled tasks.
+ */
 class Cron {
 	const CRON_NAME = 'sc_wpun_update_check';
 

@@ -7,6 +7,9 @@
 
 namespace Notifier;
 
+/**
+ * The Plugins class manages checking for Plugin updates.
+ */
 class Plugins {
 
 	/**

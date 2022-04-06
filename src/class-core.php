@@ -7,6 +7,9 @@
 
 namespace Notifier;
 
+/**
+ * The Core class manages checking for WordPress Core updates.
+ */
 class Core {
 
 	/**

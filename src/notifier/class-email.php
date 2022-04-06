@@ -9,6 +9,9 @@ namespace Notifier\Notifier;
 
 use Notifier\Contracts\Notifier;
 
+/**
+ * The email notifier extension handles notifications VIA Email.
+ */
 class Email implements Notifier {
 
 	private $markup_vars = [

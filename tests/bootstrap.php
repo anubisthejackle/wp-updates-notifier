@@ -10,7 +10,7 @@ if ( ! $wp_updates_notifier_tests_dir ) {
 	$wp_updates_notifier_tests_dir = '/tmp/wordpress-tests-lib';
 }
 
-require_once $wp_updates_notifier_tests_dir . '/includes/functions.php';
+require_once $wp_updates_notifier_tests_dir . '/includes/functions.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 
 /**
  * Manually load the plugin for tests.
@@ -20,4 +20,4 @@ function wp_updates_notifier_test_loader() {
 }
 tests_add_filter( 'muplugins_loaded', 'wp_updates_notifier_test_loader' );
 
-require $wp_updates_notifier_tests_dir . '/includes/bootstrap.php';
+require $wp_updates_notifier_tests_dir . '/includes/bootstrap.php'; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable

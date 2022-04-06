@@ -4,7 +4,6 @@
 
   <!-- Include Alley Rules -->
   <rule ref="Alley-Interactive">
-    <exclude name="Squiz.Commenting.FileComment.Missing" />
     <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar" />
     <exclude name="Squiz.Commenting.FunctionComment.ExtraParamComment" />
     <exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound" />

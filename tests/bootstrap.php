@@ -1,4 +1,9 @@
 <?php
+/**
+ * The bootstrap file for testing the plugin.
+ *
+ * @package wp-updates-notifier
+ */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 if ( ! $_tests_dir ) {

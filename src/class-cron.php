@@ -21,7 +21,7 @@ class Cron {
 		add_action( 'sc_wpun_enable_cron', [ $cron, 'enable' ] );
 		add_action( 'sc_wpun_disable_cron', [ $cron, 'disable' ] );
 
-		add_action( self::CRON_NAME, [ $cron, 'do_update_check' ] ); // action to link cron task to actual task
+		add_action( self::CRON_NAME, [ $cron, 'do_update_check' ] ); // action to link cron task to actual task.
 	}
 
 	/**
@@ -32,23 +32,23 @@ class Cron {
 	 * @return void
 	 */
 	public function enable( $manual_interval = false ) {
-		$options          = $this->get_set_options( self::OPT_FIELD ); // Get settings
-		$current_schedule = wp_get_schedule( self::CRON_NAME ); // find if a schedule already exists
+		$options          = $this->get_set_options( self::OPT_FIELD ); // Get settings.
+		$current_schedule = wp_get_schedule( self::CRON_NAME ); // find if a schedule already exists.
 
-		// if a manual cron interval is set, use this
+		// if a manual cron interval is set, use this.
 		if ( false !== $manual_interval ) {
 			$options['frequency'] = $manual_interval;
 		}
 
 		if ( 'manual' === $options['frequency'] ) {
-			do_action( 'sc_wpun_disable_cron' ); // Make sure no cron is setup as we are manual
+			do_action( 'sc_wpun_disable_cron' ); // Make sure no cron is setup as we are manual.
 		} else {
-			// check if the current schedule matches the one set in settings
+			// check if the current schedule matches the one set in settings.
 			if ( $current_schedule === $options['frequency'] ) {
 				return;
 			}
 
-			// check the cron setting is valid
+			// check the cron setting is valid.
 			if ( ! in_array( $options['frequency'], $this->get_intervals(), true ) ) {
 				return;
 			}
@@ -67,7 +67,7 @@ class Cron {
 	 * @return void
 	 */
 	public function disable() {
-		wp_clear_scheduled_hook( self::CRON_NAME ); // clear cron
+		wp_clear_scheduled_hook( self::CRON_NAME ); // clear cron.
 	}
 
 	/**
@@ -77,25 +77,25 @@ class Cron {
 	 * @return void
 	 */
 	public function do_update_check() {
-		$options = $this->get_set_options( self::OPT_FIELD ); // get settings
+		$options = $this->get_set_options( self::OPT_FIELD ); // get settings.
 
 		// Lets only do a check if one of the notification systems is set, if not, no one will get the message!
 		if ( 1 === $options['email_notifications'] || 1 === $options['slack_notifications'] ) {
 			$updates = []; // store all of the updates here.
 			if ( 0 !== $options['notify_automatic'] ) { // should we notify about core updates?
-				$updates['core'] = $this->core_update_check(); // check the WP core for updates
+				$updates['core'] = $this->core_update_check(); // check the WP core for updates.
 			} else {
-				$updates['core'] = false; // no core updates
+				$updates['core'] = false; // no core updates.
 			}
 			if ( 0 !== $options['notify_plugins'] ) { // are we to check for plugin updates?
-				$updates['plugin'] = $this->plugins_update_check(); // check for plugin updates
+				$updates['plugin'] = $this->plugins_update_check(); // check for plugin updates.
 			} else {
-				$updates['plugin'] = false; // no plugin updates
+				$updates['plugin'] = false; // no plugin updates.
 			}
 			if ( 0 !== $options['notify_themes'] ) { // are we to check for theme updates?
-				$updates['theme'] = $this->themes_update_check(); // check for theme updates
+				$updates['theme'] = $this->themes_update_check(); // check for theme updates.
 			} else {
-				$updates['theme'] = false; // no theme updates
+				$updates['theme'] = false; // no theme updates.
 			}
 
 			/**

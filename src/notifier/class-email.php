@@ -150,7 +150,7 @@ class Email implements Notifier {
 	 * @return bool Whether the email contents were sent successfully.
 	 */
 	public function send_message( $message ): bool {
-		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings
+		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings.
 
 		/**
 		 * Filters the email subject.
@@ -164,9 +164,9 @@ class Email implements Notifier {
 		$subject = sprintf( __( 'WP Updates Notifier: Updates Available @ %s', 'wp-updates-notifier' ), home_url() );
 		$subject = apply_filters( 'sc_wpun_email_subject', $subject );
 
-		add_filter( 'wp_mail_from', [ $this, 'sc_wpun_wp_mail_from' ] ); // add from filter
-		add_filter( 'wp_mail_from_name', [ $this, 'sc_wpun_wp_mail_from_name' ] ); // add from name filter
-		add_filter( 'wp_mail_content_type', [ $this, 'sc_wpun_wp_mail_content_type' ] ); // add content type filter
+		add_filter( 'wp_mail_from', [ $this, 'sc_wpun_wp_mail_from' ] ); // add from filter.
+		add_filter( 'wp_mail_from_name', [ $this, 'sc_wpun_wp_mail_from_name' ] ); // add from name filter.
+		add_filter( 'wp_mail_content_type', [ $this, 'sc_wpun_wp_mail_content_type' ] ); // add content type filter.
 
 		/**
 		 * Filters the email content.
@@ -179,12 +179,11 @@ class Email implements Notifier {
 		 */
 		$message = apply_filters( 'sc_wpun_email_content', $message );
 
-		// phpcs:disable WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail
-		$response = wp_mail( $settings['notify_to'], apply_filters( 'sc_wpun_email_subject', $subject ), apply_filters( 'sc_wpun_email_content', $message ) ); // send email
-		// phpcs:enable
-		remove_filter( 'wp_mail_from', [ $this, 'sc_wpun_wp_mail_from' ] ); // remove from filter
-		remove_filter( 'wp_mail_from_name', [ $this, 'sc_wpun_wp_mail_from_name' ] ); // remove from name filter
-		remove_filter( 'wp_mail_content_type', [ $this, 'sc_wpun_wp_mail_content_type' ] ); // remove content type filter
+		$response = wp_mail( $settings['notify_to'], apply_filters( 'sc_wpun_email_subject', $subject ), apply_filters( 'sc_wpun_email_content', $message ) ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail
+
+		remove_filter( 'wp_mail_from', [ $this, 'sc_wpun_wp_mail_from' ] ); // remove from filter.
+		remove_filter( 'wp_mail_from_name', [ $this, 'sc_wpun_wp_mail_from_name' ] ); // remove from name filter.
+		remove_filter( 'wp_mail_content_type', [ $this, 'sc_wpun_wp_mail_content_type' ] ); // remove content type filter.
 
 		return $response;
 	}

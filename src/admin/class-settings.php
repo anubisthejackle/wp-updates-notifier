@@ -62,11 +62,11 @@ class Settings {
 	 * @return void
 	 */
 	public function settings_up_to_date() {
-		$current_ver = $this->get_set_options( self::OPT_VERSION_FIELD ); // Get current plugin version
+		$current_ver = $this->get_set_options( self::OPT_VERSION_FIELD ); // Get current plugin version.
 		if ( self::OPT_VERSION !== $current_ver ) { // is the version the same as this plugin?
-			$options = (array) get_option( self::OPT_FIELD ); // get current settings from DB
+			$options = (array) get_option( self::OPT_FIELD ); // get current settings from DB.
 
-			// Get the default settings from the CONST
+			// Get the default settings from the CONST.
 			$defaults = self::DEFAULT_SETTINGS;
 
 			// If we are upgrading from settings before settings version 7, turn on email notifications by default.
@@ -74,17 +74,17 @@ class Settings {
 				$defaults['email_notifications'] = 1;
 			}
 
-			// Intersect current options with defaults. Basically removing settings that are obsolete
+			// Intersect current options with defaults. Basically removing settings that are obsolete.
 			$options = array_intersect_key( $options, $defaults );
 			// Merge current settings with defaults. Basically adding any new settings with defaults that we dont have.
 			$options = array_merge( $defaults, $options );
-			$this->get_set_options( self::OPT_FIELD, $options ); // update settings
-			$this->get_set_options( self::OPT_VERSION_FIELD, self::OPT_VERSION ); // update settings version
+			$this->get_set_options( self::OPT_FIELD, $options ); // update settings.
+			$this->get_set_options( self::OPT_VERSION_FIELD, self::OPT_VERSION ); // update settings version.
 		}
 	}
 
 	/**
-	 * Filter for when getting or settings this plugins settings
+	 * Filter for when getting or settings this plugins settings.
 	 *
 	 * @param string     $field    Option field name of where we are getting or setting plugin settings.
 	 * @param bool|mixed $settings False if getting settings else an array with settings you are saving.
@@ -128,9 +128,9 @@ class Settings {
 	 * @return void
 	 */
 	public function admin_settings_init() {
-		register_setting( self::OPT_FIELD, self::OPT_FIELD, [ $this, 'sc_wpun_settings_validate' ] ); // Register Settings
+		register_setting( self::OPT_FIELD, self::OPT_FIELD, [ $this, 'sc_wpun_settings_validate' ] ); // Register Settings.
 
-		add_settings_section( 'sc_wpun_settings_main', __( 'Settings', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_text' ], 'wp-updates-notifier' ); // Make settings main section
+		add_settings_section( 'sc_wpun_settings_main', __( 'Settings', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_text' ], 'wp-updates-notifier' ); // Make settings main section.
 		add_settings_field( 'sc_wpun_settings_main_frequency', __( 'Frequency to check', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_field_frequency' ], 'wp-updates-notifier', 'sc_wpun_settings_main' );
 		add_settings_field( 'sc_wpun_settings_main_notify_plugins', __( 'Notify about plugin updates?', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_field_notify_plugins' ], 'wp-updates-notifier', 'sc_wpun_settings_main' );
 		add_settings_field( 'sc_wpun_settings_main_notify_themes', __( 'Notify about theme updates?', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_field_notify_themes' ], 'wp-updates-notifier', 'sc_wpun_settings_main' );
@@ -156,7 +156,7 @@ class Settings {
 	 * @return void
 	 */
 	public function remove_update_nag_for_nonadmins() {
-		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings
+		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings.
 		if ( 1 === $settings['hide_updates'] ) { // is this enabled?
 			if ( ! current_user_can( 'update_plugins' ) ) { // can the current user update plugins?
 				remove_action( 'admin_notices', 'update_nag', 3 ); // no they cannot so remove the nag for them.
@@ -172,7 +172,7 @@ class Settings {
 	 * @param array  $plugin_data An array of plugin data.
 	 */
 	public function manage_plugins_custom_column( $column_name, $plugin_file, $plugin_data ) {
-		$options = $this->get_set_options( self::OPT_FIELD ); // get settings
+		$options = $this->get_set_options( self::OPT_FIELD ); // get settings.
 		if ( 1 === $options['notify_plugins'] ) {
 			if ( 'update_notifications' === $column_name ) {
 				if ( is_plugin_active( $plugin_file ) ) {
@@ -192,7 +192,7 @@ class Settings {
 	 * @param array $column_headers An array of column headers.
 	 */
 	public function manage_plugins_columns( $column_headers ) {
-		$options = $this->get_set_options( self::OPT_FIELD ); // get settings
+		$options = $this->get_set_options( self::OPT_FIELD ); // get settings.
 		if ( 1 === $options['notify_plugins'] ) {
 			$column_headers['update_notifications'] = __( 'Update Notifications', 'wp-updates-notifier' );
 		}
@@ -205,7 +205,7 @@ class Settings {
 	 * @return void
 	 */
 	public function custom_admin_css() {
-		$options = $this->get_set_options( self::OPT_FIELD ); // get settings
+		$options = $this->get_set_options( self::OPT_FIELD ); // get settings.
 		if ( 1 === $options['notify_plugins'] ) {
 			echo '<style type="text/css">
 
@@ -300,7 +300,7 @@ class Settings {
 		if ( isset( $_POST['plugin_file'] ) && isset( $_POST['toggle'] ) && current_user_can( 'manage_options' ) ) {
 			$plugin_file = sanitize_text_field( wp_unslash( $_POST['plugin_file'] ) );
 			$toggle      = sanitize_text_field( wp_unslash( $_POST['toggle'] ) );
-			$options     = $this->get_set_options( self::OPT_FIELD ); // get settings
+			$options     = $this->get_set_options( self::OPT_FIELD ); // get settings.
 
 			if ( 'disable' === $toggle ) {
 				$options['disabled_plugins'][ $plugin_file ] = 1;
@@ -311,7 +311,7 @@ class Settings {
 			} else {
 				echo 'failure';
 			}
-			$this->get_set_options( self::OPT_FIELD, $options ); // update settings
+			$this->get_set_options( self::OPT_FIELD, $options ); // update settings.
 		}
 		die();
 	}
@@ -383,7 +383,7 @@ class Settings {
 	 * @return array Array of sanitized and validated settings.
 	 */
 	public function sc_wpun_settings_validate( $input ) {
-		// disabled plugins will only be set through the plugins page, so we only check the admin referer for the options page if they aren't set
+		// disabled plugins will only be set through the plugins page, so we only check the admin referer for the options page if they aren't set.
 		if ( ! isset( $input['disabled_plugins'] ) ) {
 			check_admin_referer( 'sc_wpun_settings-options' );
 		}
@@ -543,7 +543,7 @@ class Settings {
 		}
 
 		if ( isset( $_POST['restoredefaults'] ) ) {
-			// override all settings
+			// override all settings.
 			$valid = self::DEFAULT_SETTINGS;
 		}
 

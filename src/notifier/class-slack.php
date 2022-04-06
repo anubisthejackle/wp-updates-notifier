@@ -59,7 +59,7 @@ class Slack implements Notifier {
 	 * @return bool Success or failure.
 	 */
 	public function send_message( string $message ): bool {
-		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings
+		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings.
 
 		/**
 		 * Filters the Slack username.

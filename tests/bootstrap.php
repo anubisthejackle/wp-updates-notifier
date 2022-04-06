@@ -5,12 +5,12 @@
  * @package wp-updates-notifier
  */
 
-$_tests_dir = getenv( 'WP_TESTS_DIR' );
-if ( ! $_tests_dir ) {
-	$_tests_dir = '/tmp/wordpress-tests-lib';
+$wp_updates_notifier_tests_dir = getenv( 'WP_TESTS_DIR' );
+if ( ! $wp_updates_notifier_tests_dir ) {
+	$wp_updates_notifier_tests_dir = '/tmp/wordpress-tests-lib';
 }
 
-require_once $_tests_dir . '/includes/functions.php';
+require_once $wp_updates_notifier_tests_dir . '/includes/functions.php';
 
 /**
  * Manually load the plugin for tests.
@@ -20,4 +20,4 @@ function wp_updates_notifier_test_loader() {
 }
 tests_add_filter( 'muplugins_loaded', 'wp_updates_notifier_test_loader' );
 
-require $_tests_dir . '/includes/bootstrap.php';
+require $wp_updates_notifier_tests_dir . '/includes/bootstrap.php';

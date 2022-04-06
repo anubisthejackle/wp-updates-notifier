@@ -4,7 +4,6 @@
 
   <!-- Include Alley Rules -->
   <rule ref="Alley-Interactive">
-    <exclude name="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound" />
     <exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
     <exclude name="WordPressVIPMinimum.Files.IncludingFile.UsingVariable" />
     <exclude name="WordPressVIPMinimum.Security.ProperEscapingFunction.htmlAttrNotByEscHTML" />
@@ -22,7 +21,7 @@
   <!-- Set the prefixes for functions etc. -->
   <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
     <properties>
-      <property name="prefixes" type="array" value="Notifier,wp_updates_notifier" />
+      <property name="prefixes" type="array" value="Notifier,wp_updates_notifier,sc_wpun_,wp_" />
     </properties>
   </rule>
 

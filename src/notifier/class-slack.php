@@ -45,6 +45,7 @@ class Slack implements Notifier {
 
 		$this->send_message(
 			sprintf(
+				// translators: A reference string containing the blog info and home url.
 				__( 'This is a test message from WP Updates Notifier. %s', 'wp-updates-notifier' ),
 				$reference_text
 			)

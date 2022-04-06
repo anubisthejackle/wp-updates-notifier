@@ -107,6 +107,7 @@ class Email implements Notifier {
 
 		$this->send_email_message(
 			sprintf(
+				// translators: A reference string containing blog info and home URL.
 				__( 'This is a test message from WP Updates Notifier. %s', 'wp-updates-notifier' ),
 				$reference_text
 			)
@@ -151,6 +152,12 @@ class Email implements Notifier {
 	public function send_message( $message ): bool {
 		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings.
 
+		$subject = sprintf(
+			// translators: The home URL.
+			__( 'WP Updates Notifier: Updates Available @ %s', 'wp-updates-notifier' ),
+			home_url()
+		);
+
 		/**
 		 * Filters the email subject.
 		 *
@@ -160,7 +167,6 @@ class Email implements Notifier {
 		 *
 		 * @param string  $subject Email subject line.
 		 */
-		$subject = sprintf( __( 'WP Updates Notifier: Updates Available @ %s', 'wp-updates-notifier' ), home_url() );
 		$subject = apply_filters( 'sc_wpun_email_subject', $subject );
 
 		add_filter( 'wp_mail_from', [ $this, 'sc_wpun_wp_mail_from' ] ); // add from filter.

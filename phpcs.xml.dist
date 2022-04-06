@@ -4,7 +4,6 @@
 
   <!-- Include Alley Rules -->
   <rule ref="Alley-Interactive">
-    <exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
     <exclude name="VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable" />
   </rule>
 

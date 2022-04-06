@@ -348,6 +348,7 @@ class Settings {
 					$scan_date = __( 'Never', 'wp-updates-notifier' );
 				} else {
 					$scan_date = sprintf(
+						// translators: The formatted date and time of the last check time.
 						__( '%1$1s @ %2$2s', 'wp-updates-notifier' ),
 						gmdate( $date_format, $options['last_check_time'] ),
 						gmdate( $time_format, $options['last_check_time'] )

@@ -177,9 +177,9 @@ class Settings {
 			if ( 'update_notifications' === $column_name ) {
 				if ( is_plugin_active( $plugin_file ) ) {
 					if ( isset( $options['disabled_plugins'][ $plugin_file ] ) ) {
-						echo '<button class="sc_wpun_btn sc_wpun_btn_disable" data-toggle="enable" data-file="' . esc_attr( $plugin_file ) . '">' . esc_attr( __( 'Notifications Disabled', 'wp-updates-notifier' ) ) . '</button>';
+						echo '<button class="sc_wpun_btn sc_wpun_btn_disable" data-toggle="enable" data-file="' . esc_attr( $plugin_file ) . '">' . esc_html_e( 'Notifications Disabled', 'wp-updates-notifier' ) . '</button>';
 					} else {
-						echo '<button class="sc_wpun_btn sc_wpun_btn_enable" data-toggle="disable" data-file="' . esc_attr( $plugin_file ) . '">' . esc_attr( __( 'Notifications Enabled', 'wp-updates-notifier' ) ) . '</button>';
+						echo '<button class="sc_wpun_btn sc_wpun_btn_enable" data-toggle="disable" data-file="' . esc_attr( $plugin_file ) . '">' . esc_html_e( 'Notifications Enabled', 'wp-updates-notifier' ) . '</button>';
 					}
 				}
 			}

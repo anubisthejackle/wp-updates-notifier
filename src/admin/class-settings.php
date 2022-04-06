@@ -52,7 +52,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	private function settings_up_to_date() {
+	public function settings_up_to_date() {
 		$current_ver = $this->get_set_options( self::OPT_VERSION_FIELD ); // Get current plugin version
 		if ( self::OPT_VERSION !== $current_ver ) { // is the version the same as this plugin?
 			$options = (array) get_option( self::OPT_FIELD ); // get current settings from DB
@@ -562,8 +562,31 @@ class Settings {
 		<?php foreach ( $this->get_schedules() as $k => $v ) : ?>
 			<option value="<?php echo esc_attr( $k ); ?>" <?php selected( $options['frequency'], $k ); ?>><?php echo esc_html( $v['display'] ); ?></option>
 		<?php endforeach; ?>
-		<select>
+		</select>
 		<?php
+	}
+
+	/**
+	 * Simple sort function.
+	 *
+	 * @param  int $a Integer for sorting.
+	 * @param  int $b Integer for sorting.
+	 *
+	 * @return int Frequency internval.
+	 */
+	private function sort_by_interval( $a, $b ) {
+		return $a['interval'] - $b['interval'];
+	}
+
+	/**
+	 * Get cron schedules.
+	 *
+	 * @return Array cron schedules.
+	 */
+	private function get_schedules() {
+		$schedules = wp_get_schedules();
+		uasort( $schedules, array( $this, 'sort_by_interval' ) );
+		return $schedules;
 	}
 
 	/**

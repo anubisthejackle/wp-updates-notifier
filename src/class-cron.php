@@ -6,13 +6,13 @@
 namespace Notifier;
 
 class Cron {
-	const CRON_NAME         = 'sc_wpun_update_check';
+	const CRON_NAME = 'sc_wpun_update_check';
     public static function boot(): void {
 		$cron = new self();
-		add_action( 'sc_wpun_enable_cron', [ $this, 'enable' ] );
-		add_action( 'sc_wpun_disable_cron', [ $this, 'disable' ] );
+		add_action( 'sc_wpun_enable_cron', [ $cron, 'enable' ] );
+		add_action( 'sc_wpun_disable_cron', [ $cron, 'disable' ] );
 
-		add_action( self::CRON_NAME, array( $this, 'do_update_check' ) ); // action to link cron task to actual task
+		add_action( self::CRON_NAME, array( $cron, 'do_update_check' ) ); // action to link cron task to actual task
     }
 
 	/**
@@ -131,17 +131,6 @@ class Cron {
 	}
 
 	/**
-	 * Get cron schedules.
-	 *
-	 * @return Array cron schedules.
-	 */
-	private function get_schedules() {
-		$schedules = wp_get_schedules();
-		uasort( $schedules, array( $this, 'sort_by_interval' ) );
-		return $schedules;
-	}
-
-	/**
 	 * Get cron intervals.
 	 *
 	 * @return Array cron intervals.
@@ -150,17 +139,5 @@ class Cron {
 		$intervals   = array_keys( $this->get_schedules() );
 		$intervals[] = 'manual';
 		return $intervals;
-	}
-
-	/**
-	 * Simple sort function.
-	 *
-	 * @param  int $a Integer for sorting.
-	 * @param  int $b Integer for sorting.
-	 *
-	 * @return int Frequency internval.
-	 */
-	private function sort_by_interval( $a, $b ) {
-		return $a['interval'] - $b['interval'];
 	}
 }

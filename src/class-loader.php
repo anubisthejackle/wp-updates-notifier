@@ -8,6 +8,8 @@
 namespace Notifier;
 
 use Notifier\Admin\Settings;
+use Notifier\Notifier\Email;
+use Notifier\Notifier\Slack;
 
 class Loader {
 
@@ -34,6 +36,24 @@ class Loader {
          * Bootstrap the Admin settings page.
          */
         Settings::boot();
+
+		/**
+		 * Bootstrap the update checkers.
+		 */
+		Core::boot();
+		Plugins::boot();
+		Themes::boot();
+
+		/**
+		 * Bootstrap the notifiers.
+		 */
+		// Email::boot();
+		// Slack::boot();
+
+		/**
+		 * Bootstrap the Cron Scheduler.
+		 */
+		Cron::boot();
     }
 
 	public function activate() {

@@ -15,5 +15,10 @@
     "require-dev": {
         "alleyinteractive/alley-coding-standards": "^0.3.0",
         "yoast/phpunit-polyfills": "^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

@@ -10,6 +10,8 @@
  * Text Domain: wp-updates-notifier
  * Domain Path: /languages
  * License: GPL3+
+ *
+ * @package wp-updates-notifier
  */
 
 namespace Notifier;

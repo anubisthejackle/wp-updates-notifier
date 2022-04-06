@@ -1,6 +1,8 @@
 <?php
 /**
  * The notifier contract. All notifier classes MUST implement this contract.
+ *
+ * @package wp-updates-notifier
  */
 
 namespace Notifier\Contracts;
@@ -20,4 +22,12 @@ interface Notifier {
 	 * @return bool True if successful, false otherwise.
 	 */
 	public function send_message( string $message ): bool;
+
+	/**
+	 * Used to format the message for sending.
+	 *
+	 * @param array $updates The array of updates to prepare a message from.
+	 * @return string The message to send.
+	 */
+	public function prepare_message( $updates ): string;
 }

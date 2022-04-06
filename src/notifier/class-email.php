@@ -28,7 +28,7 @@ class Email implements Notifier {
 	 *
 	 * @return string Message to be sent.
 	 */
-	public function prepare_message( $updates ) {
+	public function prepare_message( $updates ): string {
 
 		$markup_vars = $this->markup_vars;
 

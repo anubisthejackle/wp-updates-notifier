@@ -13,8 +13,16 @@ use Notifier\Notifier\Slack;
 
 class Notifier {
 
+	/**
+	 * The collection of Notifier contracts.
+	 *
+	 * @var array
+	 */
 	private $notifiers = [];
 
+	/**
+	 * Initialize the notification extensions.
+	 */
 	public static function boot(): void {
 
 		$notifier = new self();
@@ -27,17 +35,22 @@ class Notifier {
 		}
 	}
 
+	/**
+	 * Adds a notifier to the notifiers array.
+	 *
+	 * @param \NotifierContract $notifier An object that implements the Notifier contract.
+	 */
 	public function add_notifier( NotifierContract $notifier ) {
 		$this->notifiers[] = $notifier;
 	}
 
+	/**
+	 * Perform the actual message sending for all loaded notifier extensions.
+	 */
 	public function send_message() {
-
 		foreach ( $this->notifiers as $notifier ) {
 			$message = $notifier->prepare_message( $updates );
 			$notifier->send_message( $message );
 		}
-
 	}
-
 }

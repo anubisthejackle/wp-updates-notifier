@@ -9,6 +9,9 @@ namespace Notifier;
 
 class Themes {
 
+	/**
+	 * Initialize the Themes update checker.
+	 */
 	public static function boot(): void {
 		$themes = new self();
 

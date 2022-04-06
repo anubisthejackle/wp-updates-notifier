@@ -9,6 +9,10 @@ namespace Notifier;
 
 class Cron {
 	const CRON_NAME = 'sc_wpun_update_check';
+
+	/**
+	 * Initialize the Cron Scheduler.
+	 */
 	public static function boot(): void {
 		$cron = new self();
 		add_action( 'sc_wpun_enable_cron', [ $cron, 'enable' ] );

@@ -9,6 +9,9 @@ namespace Notifier;
 
 class Plugins {
 
+	/**
+	 * Initialize the Plugins update checker.
+	 */
 	public static function boot(): void {
 		$plugins = new self();
 

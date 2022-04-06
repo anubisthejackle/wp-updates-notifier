@@ -8,11 +8,12 @@
 namespace Notifier;
 
 use Notifier\Admin\Settings;
-use Notifier\Notifier\Email;
-use Notifier\Notifier\Slack;
 
 class Loader {
 
+	/**
+	 * Initialize the WP Updates Notifier bootloader.
+	 */
 	public static function boot(): void {
 
 		$loader = new self();
@@ -55,10 +56,16 @@ class Loader {
 		Cron::boot();
 	}
 
+	/**
+	 * Perform the on-activate hook.
+	 */
 	public function activate() {
 		do_action( 'sc_wpun_enable_cron' );
 	}
 
+	/**
+	 * Perform the on-deactivate hook.
+	 */
 	public function deactivate() {
 		do_action( 'sc_wpun_disable_cron' );
 	}

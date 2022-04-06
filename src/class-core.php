@@ -9,8 +9,10 @@ namespace Notifier;
 
 class Core {
 
+	/**
+	 * Initialize the WordPress core update checker.
+	 */
 	public static function boot(): void {
-		$themes = new self();
 
 	}
 

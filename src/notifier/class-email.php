@@ -14,6 +14,12 @@ use Notifier\Contracts\Notifier;
  */
 class Email implements Notifier {
 
+	/**
+	 * An array of strings that should be used for parsing the
+	 * updates into a message.
+	 *
+	 * @var string[]
+	 */
 	private $markup_vars = [
 		'i_start'     => '<i>',
 		'i_end'       => '</i>',

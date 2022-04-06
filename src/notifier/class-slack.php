@@ -14,6 +14,12 @@ use Notifier\Contracts\Notifier;
  */
 class Slack implements Notifier {
 
+	/**
+	 * An array of strings that should be used for parsing the
+	 * updates into a message.
+	 *
+	 * @var string[]
+	 */
 	private $markup_vars = [
 		'i_start'     => '_',
 		'i_end'       => '_',

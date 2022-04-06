@@ -3,9 +3,7 @@
   <description>PHP_CodeSniffer standard for WP Updates Notifier.</description>
 
   <!-- Include Alley Rules -->
-  <rule ref="Alley-Interactive">
-    <exclude name="VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable" />
-  </rule>
+  <rule ref="Alley-Interactive" />
 
   <!-- Set the text domain for i18n. -->
   <rule ref="WordPress.WP.I18n">

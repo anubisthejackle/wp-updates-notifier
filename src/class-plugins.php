@@ -59,7 +59,7 @@ class Plugins {
 		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings
 		do_action( 'wp_update_plugins' ); // force WP to check plugins for updates
 		$update_plugins = get_site_transient( 'update_plugins' ); // get information of updates
-		$plugin_updates = array(); // array to store all of the plugin updates
+		$plugin_updates = []; // array to store all of the plugin updates
 		if ( ! empty( $update_plugins->response ) ) { // any plugin updates available?
 			$plugins_need_update = $update_plugins->response; // plugins that need updating
 			$active_plugins      = array_flip( get_option( 'active_plugins' ) ); // find which plugins are active
@@ -70,12 +70,12 @@ class Plugins {
 				require_once ABSPATH . WPINC . '/version.php'; // Required for WP core version
 				foreach ( $plugins_need_update as $key => $data ) { // loop through the plugins that need updating
 					$plugin_info      = get_plugin_data( WP_PLUGIN_DIR . '/' . $key ); // get local plugin info
-					$plugin_updates[] = array(
+					$plugin_updates[] = [
 						'name'          => $plugin_info['Name'],
 						'old_version'   => $plugin_info['Version'],
 						'new_version'   => $data->new_version,
 						'changelog_url' => $data->url . 'changelog/',
-					);
+					];
 
 					$settings['notified']['plugin'][ $key ] = $data->new_version; // set plugin version we are notifying about
 				}
@@ -84,7 +84,7 @@ class Plugins {
 			}
 		} else {
 			if ( 0 !== count( $settings['notified']['plugin'] ) ) { // is there any plugin notifications?
-				$settings['notified']['plugin'] = array(); // set plugin notifications to empty as all plugins up-to-date
+				$settings['notified']['plugin'] = []; // set plugin notifications to empty as all plugins up-to-date
 				$this->get_set_options( self::OPT_FIELD, $settings ); // save settings
 			}
 		}

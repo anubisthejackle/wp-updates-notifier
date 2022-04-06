@@ -85,11 +85,11 @@ class Slack implements Notifier {
 		 */
 		$message = apply_filters( 'sc_wpun_slack_content', $message );
 
-		$payload = array(
+		$payload = [
 			'username'   => $username,
 			'icon_emoji' => $user_icon,
 			'text'       => $message,
-		);
+		];
 
 		if ( ! empty( $settings['slack_channel_override'] ) && '' !== $settings['slack_channel_override'] ) {
 			$payload['channel'] = $settings['slack_channel_override'];
@@ -119,12 +119,12 @@ class Slack implements Notifier {
 
 		$response = wp_remote_post(
 			$slack_webhook_url,
-			array(
+			[
 				'method' => 'POST',
-				'body'   => array(
+				'body'   => [
 					'payload' => wp_json_encode( $payload ),
-				),
-			)
+				],
+			]
 		);
 
 		return is_wp_error( $response );

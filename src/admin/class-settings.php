@@ -9,7 +9,7 @@ class Settings {
 	const OPT_FIELD         = 'sc_wpun_settings';
 	const OPT_VERSION_FIELD = 'sc_wpun_settings_ver';
 	const OPT_VERSION       = '8.0';
-	const DEFAULT_SETTINGS  = array(
+	const DEFAULT_SETTINGS  = [
 		'frequency'              => 'hourly',
 		'email_notifications'    => 0,
 		'notify_to'              => '',
@@ -17,18 +17,18 @@ class Settings {
 		'slack_notifications'    => 0,
 		'slack_webhook_url'      => '',
 		'slack_channel_override' => '',
-		'disabled_plugins'       => array(),
+		'disabled_plugins'       => [],
 		'notify_plugins'         => 1,
 		'notify_themes'          => 1,
 		'notify_automatic'       => 1,
 		'hide_updates'           => 1,
-		'notified'               => array(
+		'notified'               => [
 			'core'   => '',
-			'plugin' => array(),
-			'theme'  => array(),
-		),
+			'plugin' => [],
+			'theme'  => [],
+		],
 		'last_check_time'        => false,
-	);
+	];
 	public static function boot(): void {
 		$settings = new self();
 		add_action( 'init', [ $settings, 'settings_up_to_date' ] );
@@ -109,7 +109,7 @@ class Settings {
 	 * @return void
 	 */
 	public function admin_settings_menu() {
-		add_options_page( __( 'Updates Notifier', 'wp-updates-notifier' ), __( 'Updates Notifier', 'wp-updates-notifier' ), 'manage_options', 'wp-updates-notifier', array( $this, 'settings_page' ) );
+		add_options_page( __( 'Updates Notifier', 'wp-updates-notifier' ), __( 'Updates Notifier', 'wp-updates-notifier' ), 'manage_options', 'wp-updates-notifier', [ $this, 'settings_page' ] );
 	}
 
 	/**
@@ -118,26 +118,26 @@ class Settings {
 	 * @return void
 	 */
 	public function admin_settings_init() {
-		register_setting( self::OPT_FIELD, self::OPT_FIELD, array( $this, 'sc_wpun_settings_validate' ) ); // Register Settings
+		register_setting( self::OPT_FIELD, self::OPT_FIELD, [ $this, 'sc_wpun_settings_validate' ] ); // Register Settings
 
-		add_settings_section( 'sc_wpun_settings_main', __( 'Settings', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_main_text' ), 'wp-updates-notifier' ); // Make settings main section
-		add_settings_field( 'sc_wpun_settings_main_frequency', __( 'Frequency to check', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_main_field_frequency' ), 'wp-updates-notifier', 'sc_wpun_settings_main' );
-		add_settings_field( 'sc_wpun_settings_main_notify_plugins', __( 'Notify about plugin updates?', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_main_field_notify_plugins' ), 'wp-updates-notifier', 'sc_wpun_settings_main' );
-		add_settings_field( 'sc_wpun_settings_main_notify_themes', __( 'Notify about theme updates?', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_main_field_notify_themes' ), 'wp-updates-notifier', 'sc_wpun_settings_main' );
-		add_settings_field( 'sc_wpun_settings_main_notify_automatic', __( 'Notify about core updates?', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_main_field_notify_automatic' ), 'wp-updates-notifier', 'sc_wpun_settings_main' );
-		add_settings_field( 'sc_wpun_settings_main_hide_updates', __( 'Hide core WP update nag from non-admin users?', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_main_field_hide_updates' ), 'wp-updates-notifier', 'sc_wpun_settings_main' );
+		add_settings_section( 'sc_wpun_settings_main', __( 'Settings', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_text' ], 'wp-updates-notifier' ); // Make settings main section
+		add_settings_field( 'sc_wpun_settings_main_frequency', __( 'Frequency to check', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_field_frequency' ], 'wp-updates-notifier', 'sc_wpun_settings_main' );
+		add_settings_field( 'sc_wpun_settings_main_notify_plugins', __( 'Notify about plugin updates?', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_field_notify_plugins' ], 'wp-updates-notifier', 'sc_wpun_settings_main' );
+		add_settings_field( 'sc_wpun_settings_main_notify_themes', __( 'Notify about theme updates?', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_field_notify_themes' ], 'wp-updates-notifier', 'sc_wpun_settings_main' );
+		add_settings_field( 'sc_wpun_settings_main_notify_automatic', __( 'Notify about core updates?', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_field_notify_automatic' ], 'wp-updates-notifier', 'sc_wpun_settings_main' );
+		add_settings_field( 'sc_wpun_settings_main_hide_updates', __( 'Hide core WP update nag from non-admin users?', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_field_hide_updates' ], 'wp-updates-notifier', 'sc_wpun_settings_main' );
 
 		// Email notification settings.
-		add_settings_section( 'sc_wpun_settings_email_notifications', __( 'Email Notifications', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_email_notifications_text' ), 'wp-updates-notifier' );
-		add_settings_field( 'sc_wpun_settings_email_notifications_email_notifications', __( 'Send email notifications?', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_email_notifications_field_email_notifications' ), 'wp-updates-notifier', 'sc_wpun_settings_email_notifications' );
-		add_settings_field( 'sc_wpun_settings_email_notifications_notify_to', __( 'Notify email to', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_email_notifications_field_notify_to' ), 'wp-updates-notifier', 'sc_wpun_settings_email_notifications' );
-		add_settings_field( 'sc_wpun_settings_email_notifications_notify_from', __( 'Notify email from', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_email_notifications_field_notify_from' ), 'wp-updates-notifier', 'sc_wpun_settings_email_notifications' );
+		add_settings_section( 'sc_wpun_settings_email_notifications', __( 'Email Notifications', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_email_notifications_text' ], 'wp-updates-notifier' );
+		add_settings_field( 'sc_wpun_settings_email_notifications_email_notifications', __( 'Send email notifications?', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_email_notifications_field_email_notifications' ], 'wp-updates-notifier', 'sc_wpun_settings_email_notifications' );
+		add_settings_field( 'sc_wpun_settings_email_notifications_notify_to', __( 'Notify email to', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_email_notifications_field_notify_to' ], 'wp-updates-notifier', 'sc_wpun_settings_email_notifications' );
+		add_settings_field( 'sc_wpun_settings_email_notifications_notify_from', __( 'Notify email from', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_email_notifications_field_notify_from' ], 'wp-updates-notifier', 'sc_wpun_settings_email_notifications' );
 
 		// Slack notification settings.
-		add_settings_section( 'sc_wpun_settings_slack_notifications', __( 'Slack Notifications', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_slack_notifications_text' ), 'wp-updates-notifier' );
-		add_settings_field( 'sc_wpun_settings_slack_notifications_slack_notifications', __( 'Send slack notifications?', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_slack_notifications_field_slack_notifications' ), 'wp-updates-notifier', 'sc_wpun_settings_slack_notifications' );
-		add_settings_field( 'sc_wpun_settings_slack_notifications_slack_webhook_url', __( 'Webhook url', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_slack_notifications_field_slack_webhook_url' ), 'wp-updates-notifier', 'sc_wpun_settings_slack_notifications' );
-		add_settings_field( 'sc_wpun_settings_slack_notifications_slack_channel_override', __( 'Channel to notify', 'wp-updates-notifier' ), array( $this, 'sc_wpun_settings_slack_notifications_field_slack_channel_override' ), 'wp-updates-notifier', 'sc_wpun_settings_slack_notifications' );
+		add_settings_section( 'sc_wpun_settings_slack_notifications', __( 'Slack Notifications', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_slack_notifications_text' ], 'wp-updates-notifier' );
+		add_settings_field( 'sc_wpun_settings_slack_notifications_slack_notifications', __( 'Send slack notifications?', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_slack_notifications_field_slack_notifications' ], 'wp-updates-notifier', 'sc_wpun_settings_slack_notifications' );
+		add_settings_field( 'sc_wpun_settings_slack_notifications_slack_webhook_url', __( 'Webhook url', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_slack_notifications_field_slack_webhook_url' ], 'wp-updates-notifier', 'sc_wpun_settings_slack_notifications' );
+		add_settings_field( 'sc_wpun_settings_slack_notifications_slack_channel_override', __( 'Channel to notify', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_slack_notifications_field_slack_channel_override' ], 'wp-updates-notifier', 'sc_wpun_settings_slack_notifications' );
 	}
 
 	/**
@@ -420,7 +420,7 @@ class Settings {
 		if ( ! empty( $input['notify_to'] ) ) {
 			$emails_to = explode( ',', $input['notify_to'] );
 			if ( $emails_to ) {
-				$sanitized_emails = array();
+				$sanitized_emails = [];
 				$was_error        = false;
 				foreach ( $emails_to as $email_to ) {
 					$address = sanitize_email( trim( $email_to ) );
@@ -466,7 +466,7 @@ class Settings {
 		$valid['email_notifications'] = $email_notifications;
 
 		$active_plugins            = array_flip( get_option( 'active_plugins' ) );
-		$valid['disabled_plugins'] = array();
+		$valid['disabled_plugins'] = [];
 		if ( ! empty( $input['disabled_plugins'] ) ) {
 			foreach ( $input['disabled_plugins'] as $new_disabled_plugin => $val ) {
 				if ( isset( $active_plugins[ $new_disabled_plugin ] ) ) {
@@ -584,7 +584,7 @@ class Settings {
 	 */
 	private function get_schedules() {
 		$schedules = wp_get_schedules();
-		uasort( $schedules, array( $this, 'sort_by_interval' ) );
+		uasort( $schedules, [ $this, 'sort_by_interval' ] );
 		return $schedules;
 	}
 

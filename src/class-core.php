@@ -27,10 +27,10 @@ class Core {
 				require_once ABSPATH . WPINC . '/version.php'; // Including this because some plugins can mess with the real version stored in the DB.
 				$new_core_ver                 = $update_core->updates[0]->current; // The new WP core version
 				$old_core_ver                 = $wp_version; // the old WP core version
-				$core_updates                 = array(
+				$core_updates                 = [
 					'old_version' => $old_core_ver,
 					'new_version' => $new_core_ver,
-				);
+				];
 				$settings['notified']['core'] = $new_core_ver; // set core version we are notifying about
 				$this->get_set_options( self::OPT_FIELD, $settings ); // update settings
 				return $core_updates; // we have updates so return the array of updates

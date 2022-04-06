@@ -12,7 +12,7 @@ class Cron {
 		add_action( 'sc_wpun_enable_cron', [ $cron, 'enable' ] );
 		add_action( 'sc_wpun_disable_cron', [ $cron, 'disable' ] );
 
-		add_action( self::CRON_NAME, array( $cron, 'do_update_check' ) ); // action to link cron task to actual task
+		add_action( self::CRON_NAME, [ $cron, 'do_update_check' ] ); // action to link cron task to actual task
 	}
 
 	/**
@@ -72,7 +72,7 @@ class Cron {
 
 		// Lets only do a check if one of the notification systems is set, if not, no one will get the message!
 		if ( 1 === $options['email_notifications'] || 1 === $options['slack_notifications'] ) {
-			$updates = array(); // store all of the updates here.
+			$updates = []; // store all of the updates here.
 			if ( 0 !== $options['notify_automatic'] ) { // should we notify about core updates?
 				$updates['core'] = $this->core_update_check(); // check the WP core for updates
 			} else {

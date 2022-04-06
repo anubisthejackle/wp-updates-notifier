@@ -365,11 +365,11 @@ class Settings {
 				do_settings_sections( 'wp-updates-notifier' );
 				?>
 				<p>&nbsp;</p>
-				<input class="button-primary" name="Submit" type="submit" value="<?php esc_html_e( 'Save settings', 'wp-updates-notifier' ); ?>" />
-				<input class="button" name="submitwithemail" type="submit" value="<?php esc_html_e( 'Save settings with test email', 'wp-updates-notifier' ); ?>" />
-				<input class="button" name="submitwithslack" type="submit" value="<?php esc_html_e( 'Save settings with test slack post', 'wp-updates-notifier' ); ?>" />
+				<input class="button-primary" name="Submit" type="submit" value="<?php esc_attr_e( 'Save settings', 'wp-updates-notifier' ); ?>" />
+				<input class="button" name="submitwithemail" type="submit" value="<?php esc_attr_e( 'Save settings with test email', 'wp-updates-notifier' ); ?>" />
+				<input class="button" name="submitwithslack" type="submit" value="<?php esc_attr_e( 'Save settings with test slack post', 'wp-updates-notifier' ); ?>" />
 				<br><br>
-				<input class="button" name="restoredefaults" type="submit" value="<?php esc_html_e( 'Restore Default Settings', 'wp-updates-notifier' ); ?>" />
+				<input class="button" name="restoredefaults" type="submit" value="<?php esc_attr_e( 'Restore Default Settings', 'wp-updates-notifier' ); ?>" />
 			</form>
 		</div>
 		<?php

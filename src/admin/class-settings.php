@@ -7,6 +7,7 @@
 
 namespace Notifier\Admin;
 
+use Notifier\Settings as SettingsContainer;
 /**
  * The Settings class manages creating the settings page, menu items,
  * and maintaining the actual settings submissions.
@@ -41,7 +42,7 @@ class Settings {
 	 */
 	public static function boot(): void {
 		$settings = new self();
-		add_action( 'init', [ $settings, 'settings_up_to_date' ] );
+		add_action( 'init', [ SettingsContainer::get_instance(), 'maybe_migrate' ] );
 		add_filter( 'plugin_action_links', [ $settings, 'plugin_action_links' ], 10, 2 );
 
 		add_action( 'admin_menu', [ $settings, 'admin_settings_menu' ] );
@@ -52,35 +53,6 @@ class Settings {
 		add_action( 'admin_head', [ $settings, 'custom_admin_css' ] );
 		add_action( 'admin_footer', [ $settings, 'custom_admin_js' ] );
 		add_action( 'wp_ajax_toggle_plugin_notification', [ $settings, 'toggle_plugin_notification' ] );
-	}
-
-	/**
-	 * Check if this plugin settings are up to date. Firstly check the version in
-	 * the DB. If they don't match then load in defaults but don't override values
-	 * already set. Also this will remove obsolete settings that are not needed.
-	 *
-	 * @return void
-	 */
-	public function settings_up_to_date() {
-		$current_ver = $this->get_set_options( self::OPT_VERSION_FIELD ); // Get current plugin version.
-		if ( self::OPT_VERSION !== $current_ver ) { // is the version the same as this plugin?
-			$options = (array) get_option( self::OPT_FIELD ); // get current settings from DB.
-
-			// Get the default settings from the CONST.
-			$defaults = self::DEFAULT_SETTINGS;
-
-			// If we are upgrading from settings before settings version 7, turn on email notifications by default.
-			if ( intval( $current_ver ) > 0 && intval( $current_ver ) < 7 ) {
-				$defaults['email_notifications'] = 1;
-			}
-
-			// Intersect current options with defaults. Basically removing settings that are obsolete.
-			$options = array_intersect_key( $options, $defaults );
-			// Merge current settings with defaults. Basically adding any new settings with defaults that we dont have.
-			$options = array_merge( $defaults, $options );
-			$this->get_set_options( self::OPT_FIELD, $options ); // update settings.
-			$this->get_set_options( self::OPT_VERSION_FIELD, self::OPT_VERSION ); // update settings version.
-		}
 	}
 
 	/**

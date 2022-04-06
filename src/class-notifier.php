@@ -10,6 +10,7 @@ namespace Notifier;
 use Notifier\Contracts\Notifier as NotifierContract;
 use Notifier\Notifier\Email;
 use Notifier\Notifier\Slack;
+use Notifier\Settings;
 
 /**
  * The Notifier class is the root of the notification logic. It loads, and executes,
@@ -30,11 +31,11 @@ class Notifier {
 	public static function boot(): void {
 
 		$notifier = new self();
-		if ( 1 === $options['email_notifications'] ) {
+		if ( 1 === Settings::get_instance()->get( 'email_notifications' ) ) {
 			$notifier->add_notifier( new Email() );
 		}
 
-		if ( 1 === $options['slack_notifications'] ) {
+		if ( 1 === Settings::get_instance()->get( 'slack_notifications' ) ) {
 			$notifier->add_notifier( new Slack() );
 		}
 	}
@@ -52,6 +53,7 @@ class Notifier {
 	 * Perform the actual message sending for all loaded notifier extensions.
 	 */
 	public function send_message() {
+		$updates = null;
 		foreach ( $this->notifiers as $notifier ) {
 			$message = $notifier->prepare_message( $updates );
 			$notifier->send_message( $message );

@@ -7,11 +7,11 @@ namespace Notifier;
 
 class Themes {
 
-    public static function boot(): void {
+	public static function boot(): void {
 		$themes = new self();
 
 		add_filter( 'sc_wpun_themes_need_update', [ $themes, 'check_themes_against_notified' ] );
-    }
+	}
 
 	/**
 	 * Filter for removing themes from update list if already been notified about

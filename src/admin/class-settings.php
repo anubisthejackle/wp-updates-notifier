@@ -9,7 +9,7 @@ class Settings {
 	const OPT_FIELD         = 'sc_wpun_settings';
 	const OPT_VERSION_FIELD = 'sc_wpun_settings_ver';
 	const OPT_VERSION       = '8.0';
-	const DEFAULT_SETTINGS = array(
+	const DEFAULT_SETTINGS  = array(
 		'frequency'              => 'hourly',
 		'email_notifications'    => 0,
 		'notify_to'              => '',
@@ -29,21 +29,20 @@ class Settings {
 		),
 		'last_check_time'        => false,
 	);
-    public static function boot(): void {
+	public static function boot(): void {
 		$settings = new self();
 		add_action( 'init', [ $settings, 'settings_up_to_date' ] );
-        add_filter( 'plugin_action_links', [ $settings, 'plugin_action_links' ], 10, 2 );
+		add_filter( 'plugin_action_links', [ $settings, 'plugin_action_links' ], 10, 2 );
 
 		add_action( 'admin_menu', [ $settings, 'admin_settings_menu' ] );
 		add_action( 'admin_init', [ $settings, 'admin_settings_init' ] );
 		add_action( 'admin_init', [ $settings, 'remove_update_nag_for_nonadmins' ] );
-		add_action( 'manage_plugins_custom_column', [$settings, 'manage_plugins_custom_column'], 10, 3 );
-		add_action( 'manage_plugins_columns', [ $settings, 'manage_plugins_columns'] );
-		add_action( 'admin_head', [ $settings, 'custom_admin_css'] );
-		add_action( 'admin_footer', [ $settings, 'custom_admin_js'] );
-		add_action( 'wp_ajax_toggle_plugin_notification', [ $settings, 'toggle_plugin_notification'] );
-
-    }
+		add_action( 'manage_plugins_custom_column', [ $settings, 'manage_plugins_custom_column' ], 10, 3 );
+		add_action( 'manage_plugins_columns', [ $settings, 'manage_plugins_columns' ] );
+		add_action( 'admin_head', [ $settings, 'custom_admin_css' ] );
+		add_action( 'admin_footer', [ $settings, 'custom_admin_js' ] );
+		add_action( 'wp_ajax_toggle_plugin_notification', [ $settings, 'toggle_plugin_notification' ] );
+	}
 
 	/**
 	 * Check if this plugin settings are up to date. Firstly check the version in

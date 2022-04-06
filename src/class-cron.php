@@ -7,13 +7,13 @@ namespace Notifier;
 
 class Cron {
 	const CRON_NAME = 'sc_wpun_update_check';
-    public static function boot(): void {
+	public static function boot(): void {
 		$cron = new self();
 		add_action( 'sc_wpun_enable_cron', [ $cron, 'enable' ] );
 		add_action( 'sc_wpun_disable_cron', [ $cron, 'disable' ] );
 
 		add_action( self::CRON_NAME, array( $cron, 'do_update_check' ) ); // action to link cron task to actual task
-    }
+	}
 
 	/**
 	 * Enable cron for this plugin. Check if a cron should be scheduled.

@@ -7,10 +7,10 @@ namespace Notifier;
 
 class Core {
 
-    public static function boot(): void {
+	public static function boot(): void {
 		$themes = new self();
 
-    }
+	}
 
 	/**
 	 * Checks to see if any WP core updates

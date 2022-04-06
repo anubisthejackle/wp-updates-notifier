@@ -28,7 +28,10 @@ class Email implements Notifier {
 	 *
 	 * @return string Message to be sent.
 	 */
-	public function prepare_message( $updates, $markup_vars ) {
+	public function prepare_message( $updates ) {
+
+		$markup_vars = $this->markup_vars;
+
 		/**
 		 * Filters the message text intro.
 		 *
@@ -135,7 +138,7 @@ class Email implements Notifier {
 	 *
 	 * @return bool Whether the email contents were sent successfully.
 	 */
-	public function send_email_message( $message ) {
+	public function send_message( $message ): bool {
 		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings
 
 		/**

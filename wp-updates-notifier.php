@@ -26,6 +26,9 @@ Autoloader::generate(
 /**
  * Boot the plugin once the rest of the plugins have been loaded.
  */
-add_action( 'plugins_loaded', function(){
-    Loader::boot();
-});
+add_action(
+	'plugins_loaded',
+	function() {
+		Loader::boot();
+	}
+);

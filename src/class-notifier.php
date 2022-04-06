@@ -5,20 +5,37 @@
 
 namespace Notifier;
 
+use Notifier\Contracts\Notifier as NotifierContract;
+use Notifier\Notifier\Email;
+use Notifier\Notifier\Slack;
+
 class Notifier {
 
-	public function send_message() {
-		// Send email notification.
+	private $notifiers = [];
+
+	public static function boot(): void {
+
+		$notifier = new self();
 		if ( 1 === $options['email_notifications'] ) {
-			$message = $this->prepare_message( $updates, self::MARKUP_VARS_EMAIL );
-			$this->send_email_message( $message );
+			$notifier->add_notifier( new Email() );
 		}
 
-		// Send slack notification.
 		if ( 1 === $options['slack_notifications'] ) {
-			$message = $this->prepare_message( $updates, self::MARKUP_VARS_SLACK );
-			$this->send_slack_message( $message );
+			$notifier->add_notifier( new Slack() );
 		}
+	}
+
+	public function add_notifier( NotifierContract $notifier ) {
+		$this->notifiers[] = $notifier;
+	}
+
+	public function send_message() {
+
+		foreach ( $this->notifiers as $notifier ) {
+			$message = $notifier->prepare_message( $updates );
+			$notifier->send_message( $message );
+		}
+
 	}
 
 }

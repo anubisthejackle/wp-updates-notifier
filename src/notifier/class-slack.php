@@ -129,4 +129,67 @@ class Slack implements Notifier {
 
 		return is_wp_error( $response );
 	}
+
+	/**
+	 * Prepare the message.
+	 *
+	 * @param array $updates Array of all of the updates to notifiy about.
+	 * @param array $markup_vars Array of the markup characters to use.
+	 *
+	 * @return string Message to be sent.
+	 */
+	public function prepare_message( $updates ) {
+
+		$markup_vars = $this->markup_vars;
+		/**
+		 * Filters the message text intro.
+		 *
+		 * @param string $message Intro message text.
+		 */
+		$message = $markup_vars['i_start'] . esc_html( apply_filters( 'sc_wpun_message_text', __( 'Updates Available', 'wp-updates-notifier' ) ) )
+		. $markup_vars['i_end'] . $markup_vars['line_break'] . $markup_vars['b_start']
+		. esc_html( get_bloginfo() ) . $markup_vars['b_end'] . ' - '
+		. $markup_vars['link_start'] . esc_url( home_url() ) . $markup_vars['link_middle']
+		. esc_url( home_url() ) . $markup_vars['link_end'] . $markup_vars['line_break'];
+
+		if ( ! empty( $updates['core'] ) ) {
+			$message .= $markup_vars['line_break'] . $markup_vars['b_start'] . $markup_vars['link_start']
+			. esc_url( admin_url( 'update-core.php' ) ) . $markup_vars['link_middle']
+			. esc_html( __( 'WordPress Core', 'wp-updates-notifier' ) ) . $markup_vars['link_end']
+			. $markup_vars['b_end'] . ' (' . $updates['core']['old_version'] . esc_html( __( ' to ', 'wp-updates-notifier' ) )
+			. $updates['core']['new_version'] . ')' . $markup_vars['line_break'];
+		}
+
+		if ( ! empty( $updates['plugin'] ) ) {
+			$message .= $markup_vars['line_break'] . $markup_vars['b_start'] . $markup_vars['link_start']
+			. esc_url( admin_url( 'plugins.php?plugin_status=upgrade' ) ) . $markup_vars['link_middle']
+			. esc_html( __( 'Plugin Updates', 'wp-updates-notifier' ) ) . $markup_vars['link_end']
+			. $markup_vars['b_end'] . $markup_vars['line_break'];
+
+			foreach ( $updates['plugin'] as $plugin ) {
+				$message .= '	' . $plugin['name'];
+				if ( ! empty( $plugin['old_version'] ) && ! empty( $plugin['new_version'] ) ) {
+					$message .= ' (' . $plugin['old_version'] . esc_html( __( ' to ', 'wp-updates-notifier' ) )
+					. $markup_vars['link_start'] . esc_url( $plugin['changelog_url'] ) . $markup_vars['link_middle']
+					. $plugin['new_version'] . $markup_vars['link_end'] . ')' . $markup_vars['line_break'];
+				}
+			}
+		}
+
+		if ( ! empty( $updates['theme'] ) ) {
+			$message .= $markup_vars['line_break'] . $markup_vars['b_start'] . $markup_vars['link_start']
+			. esc_url( admin_url( 'themes.php' ) ) . $markup_vars['link_middle'] . esc_html( __( 'Theme Updates', 'wp-updates-notifier' ) )
+			. $markup_vars['link_end'] . $markup_vars['b_end'] . $markup_vars['line_break'];
+
+			foreach ( $updates['theme'] as $theme ) {
+				$message .= '	' . $theme['name'];
+				if ( ! empty( $theme['old_version'] ) && ! empty( $theme['new_version'] ) ) {
+					$message .= ' (' . $theme['old_version'] . esc_html( __( ' to ', 'wp-updates-notifier' ) )
+					. $theme['new_version'] . ')' . $markup_vars['line_break'];
+				}
+			}
+		}
+
+		return $message;
+	}
 }

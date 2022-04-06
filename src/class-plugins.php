@@ -7,12 +7,12 @@ namespace Notifier;
 
 class Plugins {
 
-    public static function boot(): void {
+	public static function boot(): void {
 		$plugins = new self();
 
 		add_filter( 'sc_wpun_plugins_need_update', [ $plugins, 'check_plugins_against_notified' ] );
 		add_filter( 'sc_wpun_plugins_need_update', [ $plugins, 'check_plugins_against_disabled' ] );
-    }
+	}
 
 	/**
 	 * Filter for removing plugins from update list if already been notified about

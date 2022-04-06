@@ -13,7 +13,7 @@ use Notifier\Notifier\Slack;
 
 class Loader {
 
-    public static function boot(): void {
+	public static function boot(): void {
 
 		$loader = new self();
 
@@ -32,10 +32,10 @@ class Loader {
 			dirname( plugin_basename( __FILE__ ) ) . '/languages/'
 		);
 
-        /**
-         * Bootstrap the Admin settings page.
-         */
-        Settings::boot();
+		/**
+		 * Bootstrap the Admin settings page.
+		 */
+		Settings::boot();
 
 		/**
 		 * Bootstrap the update checkers.
@@ -47,14 +47,13 @@ class Loader {
 		/**
 		 * Bootstrap the notifiers.
 		 */
-		// Email::boot();
-		// Slack::boot();
+		Notifier::boot();
 
 		/**
 		 * Bootstrap the Cron Scheduler.
 		 */
 		Cron::boot();
-    }
+	}
 
 	public function activate() {
 		do_action( 'sc_wpun_enable_cron' );

@@ -455,13 +455,13 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_main_field_notify_plugins() {
-		$options = $this->get_set_options( self::OPT_FIELD );
+		$settings = SettingsContainer::get_instance();
 		?>
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[notify_plugins]" type="radio" value="0" <?php checked( $options['notify_plugins'], 0 ); ?> /> <?php esc_html_e( 'No', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'notify_plugins' ) ); ?>" type="radio" value="0" <?php checked( $settings->get( 'notify_plugins' ), 0 ); ?> /> <?php esc_html_e( 'No', 'wp-updates-notifier' ); ?>
 		</label><br />
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[notify_plugins]" type="radio" value="1" <?php checked( $options['notify_plugins'], 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'notify_plugins' ) ); ?>" type="radio" value="1" <?php checked( $settings->get( 'notify_plugins' ), 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
 		</label><br />
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[notify_plugins]" type="radio" value="2" <?php checked( $options['notify_plugins'], 2 ); ?> /> <?php esc_html_e( 'Yes, but only active plugins', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'notify_plugins' ) ); ?>" type="radio" value="2" <?php checked( $settings->get( 'notify_plugins' ), 2 ); ?> /> <?php esc_html_e( 'Yes, but only active plugins', 'wp-updates-notifier' ); ?>
 		</label>
 		<?php
 	}
@@ -472,13 +472,13 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_main_field_notify_themes() {
-		$options = $this->get_set_options( self::OPT_FIELD );
+		$settings = SettingsContainer::get_instance();
 		?>
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[notify_themes]" type="radio" value="0" <?php checked( $options['notify_themes'], 0 ); ?> /> <?php esc_html_e( 'No', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'notify_themes' ) ); ?>" type="radio" value="0" <?php checked( $settings->get( 'notify_themes' ), 0 ); ?> /> <?php esc_html_e( 'No', 'wp-updates-notifier' ); ?>
 		</label><br />
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[notify_themes]" type="radio" value="1" <?php checked( $options['notify_themes'], 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'notify_themes' ) ); ?>" type="radio" value="1" <?php checked( $settings->get( 'notify_themes' ), 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
 		</label><br />
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[notify_themes]" type="radio" value="2" <?php checked( $options['notify_themes'], 2 ); ?> /> <?php esc_html_e( 'Yes, but only active themes', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'notify_themes' ) ); ?>" type="radio" value="2" <?php checked( $settings->get( 'notify_themes' ), 2 ); ?> /> <?php esc_html_e( 'Yes, but only active themes', 'wp-updates-notifier' ); ?>
 		</label>
 		<?php
 	}
@@ -489,11 +489,11 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_main_field_notify_automatic() {
-		$options = $this->get_set_options( self::OPT_FIELD );
+		$settings = SettingsContainer::get_instance();
 		?>
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[notify_automatic]" type="radio" value="0" <?php checked( $options['notify_automatic'], 0 ); ?> /> <?php esc_html_e( 'No', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'notify_automatic' ) ); ?>" type="radio" value="0" <?php checked( $settings->get( 'notify_automatic' ), 0 ); ?> /> <?php esc_html_e( 'No', 'wp-updates-notifier' ); ?>
 		</label><br />
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[notify_automatic]" type="radio" value="1" <?php checked( $options['notify_automatic'], 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'notify_automatic' ) ); ?>" type="radio" value="1" <?php checked( $settings->get( 'notify_automatic' ), 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
 		</label>
 		<?php
 	}
@@ -504,11 +504,11 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_main_field_hide_updates() {
-		$options = $this->get_set_options( self::OPT_FIELD );
+		$settings = SettingsContainer::get_instance();
 		?>
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[hide_updates]" type="radio" value="0" <?php checked( $options['hide_updates'], 0 ); ?> /> <?php esc_html_e( 'No', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'hide_updates' ) ); ?>" type="radio" value="0" <?php checked( $settings->get( 'hide_updates' ), 0 ); ?> /> <?php esc_html_e( 'No', 'wp-updates-notifier' ); ?>
 		</label><br />
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[hide_updates]" type="radio" value="1" <?php checked( $options['hide_updates'], 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'hide_updates' ) ); ?>" type="radio" value="1" <?php checked( $settings->get( 'hide_updates' ), 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
 		</label>
 		<?php
 	}
@@ -527,9 +527,9 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_email_notifications_field_email_notifications() {
-		$options = $this->get_set_options( self::OPT_FIELD );
+		$settings = SettingsContainer::get_instance();
 		?>
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[email_notifications]" type="checkbox" value="1" <?php checked( $options['email_notifications'], 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'email_notifications' ) ); ?>" type="checkbox" value="1" <?php checked( $settings->get( 'email_notifications' ), 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
 		</label>
 		<?php
 	}
@@ -540,9 +540,9 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_email_notifications_field_notify_to() {
-		$options = $this->get_set_options( self::OPT_FIELD );
+		$settings = SettingsContainer::get_instance();
 		?>
-		<input id="sc_wpun_settings_email_notifications_notify_to" class="regular-text" name="<?php echo esc_attr( self::OPT_FIELD ); ?>[notify_to]" value="<?php echo esc_attr( $options['notify_to'] ); ?>" />
+		<input id="sc_wpun_settings_email_notifications_notify_to" class="regular-text" name="<?php echo esc_attr( $settings->get_html_name( 'notify_to' ) ); ?>" value="<?php echo esc_attr( $settings->get( 'notify_to' ) ); ?>" />
 		<span class="description"><?php esc_html_e( 'Separate multiple email address with a comma (,)', 'wp-updates-notifier' ); ?></span>
 		<?php
 	}
@@ -553,9 +553,9 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_email_notifications_field_notify_from() {
-		$options = $this->get_set_options( self::OPT_FIELD );
+		$settings = SettingsContainer::get_instance();
 		?>
-		<input id="sc_wpun_settings_email_notifications_notify_from" class="regular-text" name="<?php echo esc_attr( self::OPT_FIELD ); ?>[notify_from]" value="<?php echo esc_attr( $options['notify_from'] ); ?>" />
+		<input id="sc_wpun_settings_email_notifications_notify_from" class="regular-text" name="<?php echo esc_attr( $settings->get_html_name( 'notify_from' ) ); ?>" value="<?php echo esc_attr( $settings->get( 'notify_from' ) ); ?>" />
 		<?php
 	}
 
@@ -573,9 +573,9 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_slack_notifications_field_slack_notifications() {
-		$options = $this->get_set_options( self::OPT_FIELD );
+		$settings = SettingsContainer::get_instance();
 		?>
-		<label><input name="<?php echo esc_attr( self::OPT_FIELD ); ?>[slack_notifications]" type="checkbox" value="1" <?php checked( $options['slack_notifications'], 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
+		<label><input name="<?php echo esc_attr( $settings->get_html_name( 'slack_notifications' ) ); ?>" type="checkbox" value="1" <?php checked( $settings->get( 'slack_notifications' ), 1 ); ?> /> <?php esc_html_e( 'Yes', 'wp-updates-notifier' ); ?>
 		</label>
 		<?php
 	}
@@ -586,9 +586,9 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_slack_notifications_field_slack_webhook_url() {
-		$options = $this->get_set_options( self::OPT_FIELD );
+		$settings = SettingsContainer::get_instance();
 		?>
-		<input id="sc_wpun_settings_slack_notifications_slack_webhook_url" class="regular-text" name="<?php echo esc_attr( self::OPT_FIELD ); ?>[slack_webhook_url]" value="<?php echo esc_attr( $options['slack_webhook_url'] ); ?>" />
+		<input id="sc_wpun_settings_slack_notifications_slack_webhook_url" class="regular-text" name="<?php echo esc_attr( $settings->get_html_name( 'slack_webhook_url' ) ); ?>" value="<?php echo esc_attr( $settings->get( 'slack_webhook_url' ) ); ?>" />
 		<?php
 	}
 
@@ -598,9 +598,9 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_slack_notifications_field_slack_channel_override() {
-		$options = $this->get_set_options( self::OPT_FIELD );
+		$settings = SettingsContainer::get_instance();
 		?>
-		<input id="sc_wpun_settings_slack_notifications_slack_channel_override" class="regular-text" name="<?php echo esc_attr( self::OPT_FIELD ); ?>[slack_channel_override]" value="<?php echo esc_attr( $options['slack_channel_override'] ); ?>" />
+		<input id="sc_wpun_settings_slack_notifications_slack_channel_override" class="regular-text" name="<?php echo esc_attr( $settings->get_html_name( 'slack_channel_override' ) ); ?>" value="<?php echo esc_attr( $settings->get( 'slack_channel_override' ) ); ?>" />
 		<span class="description"><?php esc_html_e( 'Not required.', 'wp-updates-notifier' ); ?></span>
 		<?php
 	}

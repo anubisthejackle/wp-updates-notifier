@@ -50,6 +50,21 @@ class Settings {
 		'last_check_time'        => false,
 	];
 
+	const WRITEABLE = [
+		'frequency',
+		'notify_plugins',
+		'notify_themes',
+		'notify_automatic',
+		'hide_updates',
+		'notify_to',
+		'notify_from',
+		'email_notifications',
+		'disabled_plugins',
+		'slack_webhook_url',
+		'slack_channel_override',
+		'slack_notifications',
+	];
+
 	/**
 	 * Locked constructor. Class should be accessed statically.
 	 */
@@ -69,15 +84,26 @@ class Settings {
 
 		return self::$instance;
 	}
+
+	/**
+	 * Get the default settings.
+	 *
+	 * @return array The default settings.
+	 */
+	public function get_defaults(): array {
+		return self::DEFAULT_SETTINGS;
+	}
+
 	/**
 	 * The accessor method for getting individual settings from the plugin
 	 * options.
 	 *
 	 * @param string $setting The setting name to access.
+	 * @param mixed  $default The default value in case the option isn't found.
 	 * @return mixed The setting value.
 	 */
-	public function get( string $setting ) {
-		return $this->settings[ $setting ] ?? null;
+	public function get( string $setting, $default = null ) {
+		return $this->settings[ $setting ] ?? $default;
 	}
 
 	/**

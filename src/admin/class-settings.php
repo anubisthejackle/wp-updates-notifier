@@ -7,7 +7,21 @@
 
 namespace Notifier\Admin;
 
+use Notifier\Notifier\Email;
 use Notifier\Settings as SettingsContainer;
+use Notifier\Settings\Validator\Disabled_Plugins;
+use Notifier\Settings\Validator\Email_Notifications;
+use Notifier\Settings\Validator\Frequency;
+use Notifier\Settings\Validator\Hide_Updates;
+use Notifier\Settings\Validator\Notify_Automatic;
+use Notifier\Settings\Validator\Notify_From;
+use Notifier\Settings\Validator\Notify_Plugins;
+use Notifier\Settings\Validator\Notify_Themes;
+use Notifier\Settings\Validator\Notify_To;
+use Notifier\Settings\Validator\Slack_Channel_Override;
+use Notifier\Settings\Validator\Slack_Notifications;
+use Notifier\Settings\Validator\Slack_Webhook_Url;
+
 /**
  * The Settings class manages creating the settings page, menu items,
  * and maintaining the actual settings submissions.
@@ -53,21 +67,6 @@ class Settings {
 		add_action( 'admin_head', [ $settings, 'custom_admin_css' ] );
 		add_action( 'admin_footer', [ $settings, 'custom_admin_js' ] );
 		add_action( 'wp_ajax_toggle_plugin_notification', [ $settings, 'toggle_plugin_notification' ] );
-	}
-
-	/**
-	 * Filter for when getting or settings this plugins settings.
-	 *
-	 * @param string     $field    Option field name of where we are getting or setting plugin settings.
-	 * @param bool|mixed $settings False if getting settings else an array with settings you are saving.
-	 *
-	 * @return bool|mixed True or false if setting or an array of settings if getting
-	 */
-	private function get_set_options( $field, $settings = false ) {
-		if ( false === $settings ) {
-			return apply_filters( 'sc_wpun_get_options_filter', get_option( $field ), $field );
-		}
-		return update_option( $field, apply_filters( 'sc_wpun_put_options_filter', $settings, $field ) );
 	}
 
 	/**
@@ -128,8 +127,7 @@ class Settings {
 	 * @return void
 	 */
 	public function remove_update_nag_for_nonadmins() {
-		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings.
-		if ( 1 === $settings['hide_updates'] ) { // is this enabled?
+		if ( 1 === SettingsContainer::get_instance()->get( 'hide_updates' ) ) { // is this enabled?
 			if ( ! current_user_can( 'update_plugins' ) ) { // can the current user update plugins?
 				remove_action( 'admin_notices', 'update_nag', 3 ); // no they cannot so remove the nag for them.
 			}
@@ -144,11 +142,10 @@ class Settings {
 	 * @param array  $plugin_data An array of plugin data.
 	 */
 	public function manage_plugins_custom_column( $column_name, $plugin_file, $plugin_data ) {
-		$options = $this->get_set_options( self::OPT_FIELD ); // get settings.
-		if ( 1 === $options['notify_plugins'] ) {
+		if ( 1 === SettingsContainer::get_instance()->get( 'notify_plugins' ) ) {
 			if ( 'update_notifications' === $column_name ) {
 				if ( is_plugin_active( $plugin_file ) ) {
-					if ( isset( $options['disabled_plugins'][ $plugin_file ] ) ) {
+					if ( isset( SettingsContainer::get_instance()->get( 'disabled_plugins' )[ $plugin_file ] ) ) {
 						echo '<button class="sc_wpun_btn sc_wpun_btn_disable" data-toggle="enable" data-file="' . esc_attr( $plugin_file ) . '">' . esc_html_e( 'Notifications Disabled', 'wp-updates-notifier' ) . '</button>';
 					} else {
 						echo '<button class="sc_wpun_btn sc_wpun_btn_enable" data-toggle="disable" data-file="' . esc_attr( $plugin_file ) . '">' . esc_html_e( 'Notifications Enabled', 'wp-updates-notifier' ) . '</button>';
@@ -164,8 +161,7 @@ class Settings {
 	 * @param array $column_headers An array of column headers.
 	 */
 	public function manage_plugins_columns( $column_headers ) {
-		$options = $this->get_set_options( self::OPT_FIELD ); // get settings.
-		if ( 1 === $options['notify_plugins'] ) {
+		if ( 1 === SettingsContainer::get_instance()->get( 'notify_plugins' ) ) {
 			$column_headers['update_notifications'] = __( 'Update Notifications', 'wp-updates-notifier' );
 		}
 		return $column_headers;
@@ -177,8 +173,7 @@ class Settings {
 	 * @return void
 	 */
 	public function custom_admin_css() {
-		$options = $this->get_set_options( self::OPT_FIELD ); // get settings.
-		if ( 1 === $options['notify_plugins'] ) {
+		if ( 1 === SettingsContainer::get_instance()->get( 'notify_plugins' ) ) {
 			echo '<style type="text/css">
 
 			.column-update_notifications{
@@ -270,22 +265,25 @@ class Settings {
 	public function toggle_plugin_notification() {
 		check_ajax_referer( 'toggle_plugin_notification' );
 		if ( isset( $_POST['plugin_file'] ) && isset( $_POST['toggle'] ) && current_user_can( 'manage_options' ) ) {
-			$plugin_file = sanitize_text_field( wp_unslash( $_POST['plugin_file'] ) );
-			$toggle      = sanitize_text_field( wp_unslash( $_POST['toggle'] ) );
-			$options     = $this->get_set_options( self::OPT_FIELD ); // get settings.
-
+			$plugin_file      = sanitize_text_field( wp_unslash( $_POST['plugin_file'] ) );
+			$toggle           = sanitize_text_field( wp_unslash( $_POST['toggle'] ) );
+			$settings         = SettingsContainer::get_instance();
+			$disabled_plugins = $settings->get( 'disabled_plugins', [] );
 			if ( 'disable' === $toggle ) {
-				$options['disabled_plugins'][ $plugin_file ] = 1;
+				$disabled_plugins[ $plugin_file ] = 1;
 				echo 'success';
 			} elseif ( 'enable' === $toggle ) {
-				unset( $options['disabled_plugins'][ $plugin_file ] );
+				unset( $disabled_plugins[ $plugin_file ] );
 				echo 'success';
 			} else {
 				echo 'failure';
+				wp_die();
+				exit;
 			}
-			$this->get_set_options( self::OPT_FIELD, $options ); // update settings.
+			$settings->set( 'disabled_plugins', $disabled_plugins );
 		}
-		die();
+		wp_die();
+		exit;
 	}
 
 	/**
@@ -306,9 +304,9 @@ class Settings {
 			$this->send_test_email( self::MARKUP_VARS_EMAIL );
 		}
 
-		$options     = $this->get_set_options( self::OPT_FIELD );
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );
+		$settings    = SettingsContainer::get_instance();
 		?>
 		<div class="wrap">
 			<h2><?php esc_html_e( 'Updates Notifier', 'wp-updates-notifier' ); ?></h2>
@@ -316,14 +314,14 @@ class Settings {
 			<p>
 				<span class="description">
 				<?php
-				if ( empty( $options['last_check_time'] ) ) {
+				if ( empty( $settings->get( 'last_check_time' ) ) ) {
 					$scan_date = __( 'Never', 'wp-updates-notifier' );
 				} else {
 					$scan_date = sprintf(
 						// translators: The formatted date and time of the last check time.
 						__( '%1$1s @ %2$2s', 'wp-updates-notifier' ),
-						gmdate( $date_format, $options['last_check_time'] ),
-						gmdate( $time_format, $options['last_check_time'] )
+						gmdate( $date_format, $settings->get( 'last_check_time' ) ),
+						gmdate( $time_format, $settings->get( 'last_check_time' ) )
 					);
 				}
 
@@ -356,149 +354,35 @@ class Settings {
 	 * @return array Array of sanitized and validated settings.
 	 */
 	public function sc_wpun_settings_validate( $input ) {
+		if ( isset( $_POST['restoredefaults'] ) ) {
+			// override all settings.
+			return SettingsContainer::get_instance()->get_defaults();
+		}
+
 		// disabled plugins will only be set through the plugins page, so we only check the admin referer for the options page if they aren't set.
 		if ( ! isset( $input['disabled_plugins'] ) ) {
 			check_admin_referer( 'sc_wpun_settings-options' );
 		}
-		$valid = $this->get_set_options( self::OPT_FIELD );
+
+		$valid = [];
 
 		// Validate main settings.
-		if ( in_array( $input['frequency'], $this->get_intervals(), true ) ) {
-			$valid['frequency'] = $input['frequency'];
-			do_action( 'sc_wpun_enable_cron', $input['frequency'] );
-		} else {
-			add_settings_error( 'sc_wpun_settings_main_frequency', 'sc_wpun_settings_main_frequency_error', __( 'Invalid frequency entered', 'wp-updates-notifier' ), 'error' );
-		}
-
-		$sanitized_notify_plugins = absint( isset( $input['notify_plugins'] ) ? $input['notify_plugins'] : 0 );
-		if ( $sanitized_notify_plugins >= 0 && $sanitized_notify_plugins <= 1 ) {
-			$valid['notify_plugins'] = $sanitized_notify_plugins;
-		} else {
-			add_settings_error( 'sc_wpun_settings_main_notify_plugins', 'sc_wpun_settings_main_notify_plugins_error', __( 'Invalid plugin updates value entered', 'wp-updates-notifier' ), 'error' );
-		}
-
-		$sanitized_notify_themes = absint( isset( $input['notify_themes'] ) ? $input['notify_themes'] : 0 );
-		if ( $sanitized_notify_themes >= 0 && $sanitized_notify_themes <= 1 ) {
-			$valid['notify_themes'] = $sanitized_notify_themes;
-		} else {
-			add_settings_error( 'sc_wpun_settings_main_notify_themes', 'sc_wpun_settings_main_notify_themes_error', __( 'Invalid theme updates value entered', 'wp-updates-notifier' ), 'error' );
-		}
-
-		$sanitized_notify_automatic = absint( isset( $input['notify_automatic'] ) ? $input['notify_automatic'] : 0 );
-		if ( $sanitized_notify_automatic >= 0 && $sanitized_notify_automatic <= 1 ) {
-			$valid['notify_automatic'] = $sanitized_notify_automatic;
-		} else {
-			add_settings_error( 'sc_wpun_settings_main_notify_automatic', 'sc_wpun_settings_main_notify_automatic_error', __( 'Invalid automatic updates value entered', 'wp-updates-notifier' ), 'error' );
-		}
-
-		$sanitized_hide_updates = absint( isset( $input['hide_updates'] ) ? $input['hide_updates'] : 0 );
-		if ( $sanitized_hide_updates <= 1 ) {
-			$valid['hide_updates'] = $sanitized_hide_updates;
-		} else {
-			add_settings_error( 'sc_wpun_settings_main_hide_updates', 'sc_wpun_settings_main_hide_updates_error', __( 'Invalid hide updates value entered', 'wp-updates-notifier' ), 'error' );
-		}
-
-		// Validate email notification settings.
-		if ( ! empty( $input['notify_to'] ) ) {
-			$emails_to = explode( ',', $input['notify_to'] );
-			if ( $emails_to ) {
-				$sanitized_emails = [];
-				$was_error        = false;
-				foreach ( $emails_to as $email_to ) {
-					$address = sanitize_email( trim( $email_to ) );
-					if ( ! is_email( $address ) ) {
-						add_settings_error( 'sc_wpun_settings_email_notifications_notify_to', 'sc_wpun_settings_email_notifications_notify_to_error', __( 'One or more email to addresses are invalid', 'wp-updates-notifier' ), 'error' );
-						$was_error = true;
-						break;
-					}
-					$sanitized_emails[] = $address;
-				}
-				if ( ! $was_error ) {
-					$valid['notify_to'] = implode( ',', $sanitized_emails );
-				}
-			}
-		} else {
-			$valid['notify_to'] = '';
-		}
-
-		if ( ! empty( $input['notify_from'] ) ) {
-			$sanitized_email_from = sanitize_email( $input['notify_from'] );
-			if ( is_email( $sanitized_email_from ) ) {
-				$valid['notify_from'] = $sanitized_email_from;
-			} else {
-				add_settings_error( 'sc_wpun_settings_email_notifications_notify_from', 'sc_wpun_settings_email_notifications_notify_from_error', __( 'Invalid email from entered', 'wp-updates-notifier' ), 'error' );
-			}
-		} else {
-			$valid['notify_from'] = '';
-		}
-
-		$email_notifications = absint( isset( $input['email_notifications'] ) ? $input['email_notifications'] : 0 );
-		if ( 1 < $email_notifications ) {
-			add_settings_error( 'sc_wpun_settings_email_notifications_email_notifications', 'sc_wpun_settings_email_notifications_email_notifications_error', __( 'Invalid notification email value entered', 'wp-updates-notifier' ), 'error' );
-		}
-
-		if ( 1 === $email_notifications ) {
-			if ( ! empty( $valid['notify_to'] ) && ! empty( $valid['notify_from'] ) ) {
-				$email_notifications = 1;
-			} else {
-				add_settings_error( 'sc_wpun_settings_email_notifications_notify_from', 'sc_wpun_settings_email_notifications_notify_to_error', __( 'Can not enable email notifications, addresses are not valid', 'wp-updates-notifier' ), 'error' );
-				$email_notifications = 0;
-			}
-		}
-		$valid['email_notifications'] = $email_notifications;
-
-		$active_plugins            = array_flip( get_option( 'active_plugins' ) );
-		$valid['disabled_plugins'] = [];
-		if ( ! empty( $input['disabled_plugins'] ) ) {
-			foreach ( $input['disabled_plugins'] as $new_disabled_plugin => $val ) {
-				if ( isset( $active_plugins[ $new_disabled_plugin ] ) ) {
-					$valid['disabled_plugins'][ $new_disabled_plugin ] = 1;
-				}
-			}
-		}
+		$valid['frequency']           = ( new Frequency() )->validate( $input['frequency'] );
+		$valid['notify_plugins']      = ( new Notify_Plugins() )->validate( $input['notify_plugins'] );
+		$valid['notify_themes']       = ( new Notify_Themes() )->validate( $input['notify_themes'] );
+		$valid['notify_automatic']    = ( new Notify_Automatic() )->validate( $input['notify_automatic'] );
+		$valid['hide_updates']        = ( new Hide_Updates() )->validate( $input['hide_updates'] );
+		$valid['notify_to']           = ( new Notify_To() )->validate( $input['notify_to'] );
+		$valid['notify_from']         = ( new Notify_From() )->validate( $input['notify_from'] );
+		$valid['email_notifications'] = ( new Email_Notifications() )->validate( $input['email_notifications'] );
+		$valid['disabled_plugins']    = ( new Disabled_Plugins() )->validate( $input['disabled_plugins'] );
 
 		// Validate slack settings.
-		if ( ! empty( $input['slack_webhook_url'] ) ) {
-			if ( false === filter_var( $input['slack_webhook_url'], FILTER_VALIDATE_URL ) ) {
-				add_settings_error( 'sc_wpun_settings_slack_notifications_slack_webhook_url', 'sc_wpun_settings_slack_notifications_slack_webhook_url_error', __( 'Invalid webhook url entered', 'wp-updates-notifier' ), 'error' );
-			} else {
-				$valid['slack_webhook_url'] = $input['slack_webhook_url'];
-			}
-		} else {
-			$valid['slack_webhook_url'] = '';
-		}
-
-		if ( ! empty( $input['slack_channel_override'] ) ) {
-			if ( '#' !== substr( $input['slack_channel_override'], 0, 1 ) && '@' !== substr( $input['slack_channel_override'], 0, 1 ) ) {
-				add_settings_error( 'sc_wpun_settings_slack_notifications_slack_channel_override', 'sc_wpun_settings_slack_notifications_slack_channel_override_error', __( 'Channel name must start with a # or @', 'wp-updates-notifier' ), 'error' );
-			} elseif ( strpos( $input['slack_channel_override'], ' ' ) ) {
-				add_settings_error( 'sc_wpun_settings_slack_notifications_slack_channel_override', 'sc_wpun_settings_slack_notifications_slack_channel_override_error', __( 'Channel name must not contain a space', 'wp-updates-notifier' ), 'error' );
-			} else {
-				$valid['slack_channel_override'] = $input['slack_channel_override'];
-			}
-		} else {
-			$valid['slack_channel_override'] = '';
-		}
-
-		$slack_notifications = absint( isset( $input['slack_notifications'] ) ? $input['slack_notifications'] : 0 );
-		if ( $slack_notifications > 1 ) {
-			add_settings_error( 'sc_wpun_settings_slack_notifications_slack_notifications', 'sc_wpun_settings_slack_notifications_slack_notifications_error', __( 'Invalid notification slack value entered', 'wp-updates-notifier' ), 'error' );
-		}
-
-		if ( 1 === $slack_notifications ) {
-			if ( '' === $valid['slack_webhook_url'] ) {
-				add_settings_error( 'sc_wpun_settings_slack_notifications_slack_webhook_url', 'sc_wpun_settings_slack_notifications_slack_webhook_url_error', __( 'No to slack webhoook url entered', 'wp-updates-notifier' ), 'error' );
-				$slack_notifications = 0;
-			} else {
-				$slack_notifications = 1;
-			}
-		} else {
-			$slack_notifications = 0;
-		}
-		$valid['slack_notifications'] = $slack_notifications;
+		$valid['slack_webhook_url']      = ( new Slack_Webhook_Url() )->validate( $input['slack_webhook_url'] );
+		$valid['slack_channel_override'] = ( new Slack_Channel_Override() )->validate( $input['slack_channel_override'] );
+		$valid['slack_notifications']    = ( new Slack_Notifications() )->validate( $input['slack_notifications'] );
 
 		// Parse sending test notifiations.
-
 		if ( isset( $_POST['submitwithemail'] ) ) {
 			if ( '' !== $valid['notify_to'] && '' !== $valid['notify_from'] ) {
 				set_transient( 'sc_wpun_send_test_email', 1 );
@@ -513,11 +397,6 @@ class Settings {
 			} else {
 				add_settings_error( 'sc_wpun_settings_email_notifications_slack_notifications', 'sc_wpun_settings_email_notifications_slack_notifications_error', __( 'Can not post test slack message. Slack settings are invalid.', 'wp-updates-notifier' ), 'error' );
 			}
-		}
-
-		if ( isset( $_POST['restoredefaults'] ) ) {
-			// override all settings.
-			$valid = self::DEFAULT_SETTINGS;
 		}
 
 		return $valid;
@@ -537,11 +416,11 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_main_field_frequency() {
-		$options = $this->get_set_options( self::OPT_FIELD );
+		$frequency = SettingsContainer::get_instance()->get( 'frequency' );
 		?>
 		<select id="sc_wpun_settings_main_frequency" name="<?php echo esc_attr( self::OPT_FIELD ); ?>[frequency]">
 		<?php foreach ( $this->get_schedules() as $k => $v ) : ?>
-			<option value="<?php echo esc_attr( $k ); ?>" <?php selected( $options['frequency'], $k ); ?>><?php echo esc_html( $v['display'] ); ?></option>
+			<option value="<?php echo esc_attr( $k ); ?>" <?php selected( $frequency, $k ); ?>><?php echo esc_html( $v['display'] ); ?></option>
 		<?php endforeach; ?>
 		</select>
 		<?php

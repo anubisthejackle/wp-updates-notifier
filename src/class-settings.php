@@ -24,7 +24,7 @@ class Settings {
 	 *
 	 * @var \Notifier\Settings
 	 */
-	private static Settings $instance;
+	private static $instance;
 
 	const OPT_FIELD         = 'sc_wpun_settings';
 	const OPT_VERSION_FIELD = 'sc_wpun_settings_ver';
@@ -146,5 +146,15 @@ class Settings {
 			$this->set( self::OPT_FIELD, $options ); // update settings.
 			$this->set( self::OPT_VERSION_FIELD, self::OPT_VERSION ); // update settings version.
 		}
+	}
+
+	/**
+	 * Generate the HTML element name for the setting.
+	 *
+	 * @param string $setting The setting name.
+	 * @return string The HTML element name.
+	 */
+	public function get_html_name( string $setting ): string {
+		return self::OPT_FIELD . '[notify_plugins]';
 	}
 }

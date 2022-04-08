@@ -14,6 +14,8 @@ abstract class Integration_Test_Case extends Framework_Test_Case {
 			return;
 		}
 
+		// Silence WP Installation output.
+		ob_start();
 		\Mantle\Testing\install(
 			function() {
 				tests_add_filter(
@@ -24,6 +26,7 @@ abstract class Integration_Test_Case extends Framework_Test_Case {
 				);
 			}
 		);
+		ob_end_clean();
 
 		self::$installed = true;
 	}

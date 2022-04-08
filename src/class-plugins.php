@@ -18,7 +18,7 @@ class Plugins {
 	public static function boot(): void {
 		$plugins = new self();
 
-		add_filter( 'sc_wpun_plugins_need_update', [ $plugins, 'check_plugins_against_notified' ] );
+		add_filter( 'sc_wpun_plugins_need_update', [ $plugins, 'check_plugins_against_notified' ], 10, 2 );
 		add_filter( 'sc_wpun_plugins_need_update', [ $plugins, 'check_plugins_against_disabled' ] );
 	}
 
@@ -29,15 +29,17 @@ class Plugins {
 	 *
 	 * @return array $plugins_need_update
 	 */
-	public function check_plugins_against_notified( $plugins_need_update ) {
-		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings.
-		foreach ( $plugins_need_update as $key => $data ) { // loop through plugins that need update.
-			if ( isset( $notified['plugin'][ $key ] ) ) { // has this plugin been notified before?
-				if ( $data->new_version === $notified['plugin'][ $key ] ) { // does this plugin version match that of the one that's been notified?
-					unset( $plugins_need_update[ $key ] ); // don't notify this plugin as has already been notified.
-				}
+	public function check_plugins_against_notified( $plugins_need_update, $notified ) {
+		foreach ( $plugins_need_update as $plugin => $data ) {
+            if (! isset($notified['plugin'][ $plugin ])) {
+                continue;
+            }
+
+			if ( $data->new_version === $notified['plugin'][ $plugin ] ) {
+				unset( $plugins_need_update[ $plugin ] );
 			}
 		}
+
 		return $plugins_need_update;
 	}
 
@@ -49,12 +51,14 @@ class Plugins {
 	 * @return array $plugins_need_update
 	 */
 	public function check_plugins_against_disabled( $plugins_need_update ) {
-		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings.
-		foreach ( $plugins_need_update as $key => $data ) { // loop through plugins that need update.
-			if ( isset( $settings['disabled_plugins'][ $key ] ) ) { // is this plugin's notifications disabled.
-				unset( $plugins_need_update[ $key ] ); // don't notify this plugin.
+		$disabled_plugins = Settings::get_instance()->get( 'disabled_plugins' );
+
+		foreach ( $plugins_need_update as $plugin => $data ) {
+			if ( isset( $disabled_plugins[ $plugin ] ) ) {
+				unset( $plugins_need_update[ $plugin ] );
 			}
 		}
+
 		return $plugins_need_update;
 	}
 
@@ -87,7 +91,8 @@ class Plugins {
 
 		$active_plugins      = array_flip( $active_plugins );
 		$plugins_need_update = array_intersect_key( $plugins_need_update, $active_plugins );
-		$plugins_need_update = apply_filters( 'sc_wpun_plugins_need_update', $plugins_need_update );
+
+		$plugins_need_update = apply_filters( 'sc_wpun_plugins_need_update', $plugins_need_update, $notified );
 
         if( empty( $plugins_need_update ) ) {
             return false;

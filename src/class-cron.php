@@ -89,16 +89,14 @@ class Cron {
 			'theme'  => false,
 		];
 
-		if ( 0 !== $settings->get( 'notify_automatic' ) ) {
-			$updates['core'] = $this->update_check();
-		}
+		$updaters = [
+			'core'   => fn() => new Core(),
+			'plugin' => fn() => new Plugins(),
+			'theme'  => fn() => new Themes(),
+		];
 
-		if ( 0 !== $settings->get( 'notify_plugins' ) ) {
-			$updates['plugin'] = $this->update_check();
-		}
-
-		if ( 0 !== $settings->get( 'notify_themes' ) ) {
-			$updates['theme'] = $this->update_check();
+		foreach ( $updaters as $type => $updater ) {
+			$updates[ $type ] = $updater()->update_check();
 		}
 
 		/**

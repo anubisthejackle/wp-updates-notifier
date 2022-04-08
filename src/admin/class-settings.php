@@ -101,7 +101,13 @@ class Settings {
 	public function admin_settings_init() {
 		register_setting( self::OPT_FIELD, self::OPT_FIELD, [ $this, 'sc_wpun_settings_validate' ] ); // Register Settings.
 
-		add_settings_section( 'sc_wpun_settings_main', __( 'Settings', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_text' ], 'wp-updates-notifier' ); // Make settings main section.
+		add_settings_section(
+			'sc_wpun_settings_main',
+			__( 'Settings', 'wp-updates-notifier' ),
+			null,
+			'wp-updates-notifier'
+		); // Make settings main section.
+
 		add_settings_field( 'sc_wpun_settings_main_frequency', __( 'Frequency to check', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_field_frequency' ], 'wp-updates-notifier', 'sc_wpun_settings_main' );
 		add_settings_field( 'sc_wpun_settings_main_notify_plugins', __( 'Notify about plugin updates?', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_field_notify_plugins' ], 'wp-updates-notifier', 'sc_wpun_settings_main' );
 		add_settings_field( 'sc_wpun_settings_main_notify_themes', __( 'Notify about theme updates?', 'wp-updates-notifier' ), [ $this, 'sc_wpun_settings_main_field_notify_themes' ], 'wp-updates-notifier', 'sc_wpun_settings_main' );
@@ -388,14 +394,6 @@ class Settings {
 		}
 
 		return $valid;
-	}
-
-	/**
-	 * Output the text at the top of the main settings section (function is required even if it outputs nothing).
-	 *
-	 * @return void
-	 */
-	public function sc_wpun_settings_main_text() {
 	}
 
 	/**

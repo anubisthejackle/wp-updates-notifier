@@ -29,7 +29,6 @@ class Notifier {
 	 * Initialize the notification extensions.
 	 */
 	public static function boot(): void {
-
 		$notifier = new self();
 		if ( 1 === Settings::get_instance()->get( 'email_notifications' ) ) {
 			$notifier->add_notifier( new Email() );
@@ -38,6 +37,8 @@ class Notifier {
 		if ( 1 === Settings::get_instance()->get( 'slack_notifications' ) ) {
 			$notifier->add_notifier( new Slack() );
 		}
+
+		add_action( 'notifier_send_notification', [ $notifier, 'send_message' ] );
 	}
 
 	/**
@@ -51,9 +52,10 @@ class Notifier {
 
 	/**
 	 * Perform the actual message sending for all loaded notifier extensions.
+	 *
+	 * @param array $updates The array of updates to notify about.
 	 */
-	public function send_message() {
-		$updates = null;
+	public function send_message( $updates ): void {
 		foreach ( $this->notifiers as $notifier ) {
 			$message = $notifier->prepare_message( $updates );
 			$notifier->send_message( $message );

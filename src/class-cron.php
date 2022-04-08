@@ -109,23 +109,18 @@ class Cron {
 		 * @param array  $updates Array of updates to notify about.
 		 */
 		$updates = apply_filters( 'sc_wpun_updates', $updates );
+		$this->log_last_check_time();
 
-		if ( ! empty( $updates['core'] ) || ! empty( $updates['plugin'] ) || ! empty( $updates['theme'] ) ) { // Did anything come back as need updating?
+		$has_updates = array_reduce( $updates, fn( $carry, $updated ) => $carry || false !== $updated, false );
 
-			// Send email notification.
-			if ( 1 === $settings->get( 'email_notifications' ) ) {
-				$message = $this->prepare_message( $updates, self::MARKUP_VARS_EMAIL );
-				$this->send_email_message( $message );
-			}
-
-			// Send slack notification.
-			if ( 1 === $settings->get( 'slack_notifications' ) ) {
-				$message = $this->prepare_message( $updates, self::MARKUP_VARS_SLACK );
-				$this->send_slack_message( $message );
-			}
+		/**
+		 * If we have no updates there is no need to send a notification.
+		 */
+		if ( false === $has_updates ) {
+			return;
 		}
 
-		$this->log_last_check_time();
+		do_action( 'notifier_send_notification', $updates );
 	}
 
 	/**
@@ -134,8 +129,6 @@ class Cron {
 	 * @return void
 	 */
 	private function log_last_check_time() {
-		$options                    = $this->get_set_options( self::OPT_FIELD );
-		$options['last_check_time'] = time();
-		$this->get_set_options( self::OPT_FIELD, $options );
+		Settings::get_instance()->set( 'last_check_time', \time() );
 	}
 }

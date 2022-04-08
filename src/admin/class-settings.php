@@ -381,8 +381,8 @@ class Settings {
 		];
 
 		$valid = [];
-		foreach( $validators as $name => $validator ){
-			if( ! isset( $input[ $name ] ) ){
+		foreach ( $validators as $name => $validator ) {
+			if ( ! isset( $input[ $name ] ) ) {
 				continue;
 			}
 
@@ -548,8 +548,8 @@ class Settings {
 	 */
 	public function sc_wpun_settings_email_notifications_field_notify_to() {
 		$settings = SettingsContainer::get_instance();
-		$emails = $settings->get( 'notify_to' );
-		$emails = ( ! empty( $emails ) ) ? implode( ',', $emails ) : '';
+		$emails   = $settings->get( 'notify_to' );
+		$emails   = ( ! empty( $emails ) ) ? implode( ',', $emails ) : '';
 
 		?>
 		<input id="sc_wpun_settings_email_notifications_notify_to" class="regular-text" name="<?php echo esc_attr( $settings->get_html_name( 'notify_to' ) ); ?>" value="<?php echo esc_attr( $emails ); ?>" />

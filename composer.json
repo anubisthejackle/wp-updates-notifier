@@ -1,24 +1,42 @@
 {
-    "name": "alleyinteractive/wp-updates-notifier",
-    "description": "Sends email or Slack message to notify you if there are any updates for your WordPress site. Can notify about core, plugin and theme updates.",
-    "type": "wordpress-plugin",
-    "license": "GPL 3+",
-    "authors": [
-        {
-            "name": "Alley Interactive",
-            "email": "noreply@alley.co"
-        }
-    ],
-    "require": {
-        "alleyinteractive/wordpress-autoloader": "^0.1.1"
-    },
-    "require-dev": {
-        "alleyinteractive/alley-coding-standards": "^0.3.0",
-        "yoast/phpunit-polyfills": "^1.0"
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+  "name": "alleyinteractive/wp-updates-notifier",
+  "description": "Sends email or Slack message to notify you if there are any updates for your WordPress site. Can notify about core, plugin and theme updates.",
+  "type": "wordpress-plugin",
+  "license": "GPL 3+",
+  "authors": [
+      {
+          "name": "Alley Interactive",
+          "email": "noreply@alley.co"
+      }
+  ],
+  "require": {
+      "alleyinteractive/wordpress-autoloader": "^0.1.1"
+  },
+  "require-dev": {
+      "alleyinteractive/alley-coding-standards": "^0.3.0",
+      "yoast/phpunit-polyfills": "^1.0",
+      "alleyinteractive/mantle-framework": "dev-main"
+  },
+  "config": {
+      "allow-plugins": {
+          "dealerdirect/phpcodesniffer-composer-installer": true,
+          "alleyinteractive/composer-wordpress-autoloader": true
+      }
+  },
+  "scripts": {
+    "phpcbf": "phpcbf --standard=./phpcs.xml.dist .",
+    "phpcs": "phpcs --standard=./phpcs.xml.dist .",
+    "phpunit": "phpunit",
+    "test": [
+        "@phpcs",
+        "@phpunit"
+    ]
+  },
+  "extra": {
+    "wordpress-autoloader": {
+        "autoload-dev": {
+            "Notifier\\Tests\\": "tests"
         }
     }
+  }
 }

@@ -30,9 +30,9 @@ class Themes {
 	 */
 	public function check_themes_against_notified( $themes_need_update, $notified ) {
 		foreach ( $themes_need_update as $theme => $data ) {
-            if (! isset($notified['theme'][ $theme ])) {
-                continue;
-            }
+			if ( ! isset( $notified['theme'][ $theme ] ) ) {
+				continue;
+			}
 
 			if ( $data['new_version'] === $notified['theme'][ $theme ] ) {
 				unset( $themes_need_update[ $theme ] );

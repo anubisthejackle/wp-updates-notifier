@@ -10,8 +10,11 @@
 		<const name="WP_UPDATES_NOTIFIER_UNIT_TESTS" value="1" />
 	</php>
 	<testsuites>
-		<testsuite>
-			<directory prefix="test-" suffix=".php">./tests/</directory>
+		<testsuite name="Feature Tests">
+			<directory prefix="test-" suffix=".php">./tests/feature/</directory>
+		</testsuite>
+		<testsuite name="Unit Tests">
+			<directory prefix="test-" suffix=".php">./tests/unit/</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

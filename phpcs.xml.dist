@@ -19,6 +19,10 @@
     </properties>
   </rule>
 
+  <rule ref="WordPress.Files.FileName">
+    <exclude-pattern>tests/*</exclude-pattern>
+  </rule>
+
   <!--
   Pass some flags to PHPCS:
     p flag: Show progress of the run.

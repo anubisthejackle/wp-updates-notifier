@@ -32,8 +32,8 @@ class Plugins {
 	public function check_plugins_against_notified( $plugins_need_update ) {
 		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings.
 		foreach ( $plugins_need_update as $key => $data ) { // loop through plugins that need update.
-			if ( isset( $settings['notified']['plugin'][ $key ] ) ) { // has this plugin been notified before?
-				if ( $data->new_version === $settings['notified']['plugin'][ $key ] ) { // does this plugin version match that of the one that's been notified?
+			if ( isset( $notified['plugin'][ $key ] ) ) { // has this plugin been notified before?
+				if ( $data->new_version === $notified['plugin'][ $key ] ) { // does this plugin version match that of the one that's been notified?
 					unset( $plugins_need_update[ $key ] ); // don't notify this plugin as has already been notified.
 				}
 			}
@@ -64,38 +64,50 @@ class Plugins {
 	 * @return false|array
 	 */
 	public function update_check() {
-		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings.
-		do_action( 'wp_update_plugins' ); // force WP to check plugins for updates.
-		$update_plugins = get_site_transient( 'update_plugins' ); // get information of updates.
-		$plugin_updates = []; // array to store all of the plugin updates.
-		if ( ! empty( $update_plugins->response ) ) { // any plugin updates available?
-			$plugins_need_update = $update_plugins->response; // plugins that need updating.
-			$active_plugins      = array_flip( get_option( 'active_plugins' ) ); // find which plugins are active.
-			$plugins_need_update = array_intersect_key( $plugins_need_update, $active_plugins ); // only keep plugins that are active.
-			$plugins_need_update = apply_filters( 'sc_wpun_plugins_need_update', $plugins_need_update ); // additional filtering of plugins need update.
-			if ( count( $plugins_need_update ) >= 1 ) { // any plugins need updating after all the filtering gone on above?
-				require_once ABSPATH . 'wp-admin/includes/plugin-install.php'; // Required for plugin API.
-				require_once ABSPATH . WPINC . '/version.php'; // Required for WP core version.
-				foreach ( $plugins_need_update as $key => $data ) { // loop through the plugins that need updating.
-					$plugin_info      = get_plugin_data( WP_PLUGIN_DIR . '/' . $key ); // get local plugin info.
-					$plugin_updates[] = [
-						'name'          => $plugin_info['Name'],
-						'old_version'   => $plugin_info['Version'],
-						'new_version'   => $data->new_version,
-						'changelog_url' => $data->url . 'changelog/',
-					];
 
-					$settings['notified']['plugin'][ $key ] = $data->new_version; // set plugin version we are notifying about.
-				}
-				$this->get_set_options( self::OPT_FIELD, $settings ); // save settings.
-				return $plugin_updates; // we have plugin updates return the array.
-			}
-		} else {
-			if ( 0 !== count( $settings['notified']['plugin'] ) ) { // is there any plugin notifications?
-				$settings['notified']['plugin'] = []; // set plugin notifications to empty as all plugins up-to-date.
-				$this->get_set_options( self::OPT_FIELD, $settings ); // save settings.
-			}
+		$settings = Settings::get_instance();
+
+		do_action( 'wp_update_plugins' );
+		$update_plugins = get_site_transient( 'update_plugins' );
+		$plugin_updates = [];
+		$notified       = $settings->get( 'notified' );
+
+		if ( empty( $update_plugins->response ) ) {
+			$notified['plugin'] = [];
+			$settings->set( 'notified', $notified );
+			return false;
 		}
-		return false; // No plugin updates so return false.
+
+		$plugins_need_update = $update_plugins->response;
+		$active_plugins      = get_option( 'active_plugins' );
+
+		if( ! is_array( $active_plugins ) ) {
+			$active_plugins = [];
+		}
+
+		$active_plugins      = array_flip( $active_plugins );
+		$plugins_need_update = array_intersect_key( $plugins_need_update, $active_plugins );
+		$plugins_need_update = apply_filters( 'sc_wpun_plugins_need_update', $plugins_need_update );
+
+        if( empty( $plugins_need_update ) ) {
+            return false;
+        }
+
+		require_once ABSPATH . 'wp-admin/includes/plugin-install.php'; // Required for plugin API.
+
+		foreach ( $plugins_need_update as $plugin => $data ) {
+			$plugin_info      = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
+			$plugin_updates[] = [
+				'name'          => $plugin_info['Name'],
+				'old_version'   => $plugin_info['Version'],
+				'new_version'   => $data->new_version,
+				'changelog_url' => $data->url . 'changelog/',
+			];
+
+			$notified['plugin'][ $plugin ] = $data->new_version;
+		}
+
+		$settings->set( 'notified', $notified );
+		return $plugin_updates;
 	}
 }

@@ -61,9 +61,9 @@ class Plugins {
 	/**
 	 * Check to see if any plugin updates.
 	 *
-	 * @return bool
+	 * @return false|array
 	 */
-	private function plugins_update_check() {
+	public function update_check() {
 		$settings = $this->get_set_options( self::OPT_FIELD ); // get settings.
 		do_action( 'wp_update_plugins' ); // force WP to check plugins for updates.
 		$update_plugins = get_site_transient( 'update_plugins' ); // get information of updates.

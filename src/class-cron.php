@@ -23,7 +23,7 @@ class Cron {
 		add_action( 'sc_wpun_enable_cron', [ $cron, 'enable' ] );
 		add_action( 'sc_wpun_disable_cron', [ $cron, 'disable' ] );
 
-		add_action( self::CRON_NAME, [ $cron, 'do_update_check' ] ); // action to link cron task to actual task.
+		add_action( self::CRON_NAME, [ $cron, 'do_update_check' ] );
 	}
 
 	/**
@@ -34,33 +34,30 @@ class Cron {
 	 * @return void
 	 */
 	public function enable( $manual_interval = false ) {
-		$options          = $this->get_set_options( self::OPT_FIELD ); // Get settings.
-		$current_schedule = wp_get_schedule( self::CRON_NAME ); // find if a schedule already exists.
-
 		// if a manual cron interval is set, use this.
 		if ( false !== $manual_interval ) {
-			$options['frequency'] = $manual_interval;
-		}
-
-		if ( 'manual' === $options['frequency'] ) {
 			do_action( 'sc_wpun_disable_cron' ); // Make sure no cron is setup as we are manual.
-		} else {
-			// check if the current schedule matches the one set in settings.
-			if ( $current_schedule === $options['frequency'] ) {
-				return;
-			}
-
-			// check the cron setting is valid.
-			if ( ! in_array( $options['frequency'], Scheduler::get_instance()->get_intervals(), true ) ) {
-				return;
-			}
-
-			// Remove any cron's for this plugin first so we don't end up with multiple cron's doing the same thing.
-			do_action( 'sc_wpun_disable_cron' );
-
-			// Schedule cron for this plugin.
-			wp_schedule_event( time(), $options['frequency'], self::CRON_NAME );
+			return;
 		}
+
+		$settings         = Settings::get_instance();
+		$current_schedule = wp_get_schedule( self::CRON_NAME ); // find if a schedule already exists.
+
+		// check if the current schedule matches the one set in settings.
+		if ( $current_schedule === $settings->get( 'frequency' ) ) {
+			return;
+		}
+
+		// check the cron setting is valid.
+		if ( ! in_array( $settings->get( 'frequency' ), Scheduler::get_instance()->get_intervals(), true ) ) {
+			return;
+		}
+
+		// Remove any cron's for this plugin first so we don't end up with multiple cron's doing the same thing.
+		do_action( 'sc_wpun_disable_cron' );
+
+		// Schedule cron for this plugin.
+		wp_schedule_event( \time(), $settings->get( 'frequency' ), self::CRON_NAME );
 	}
 
 	/**
@@ -69,7 +66,7 @@ class Cron {
 	 * @return void
 	 */
 	public function disable() {
-		wp_clear_scheduled_hook( self::CRON_NAME ); // clear cron.
+		wp_clear_scheduled_hook( self::CRON_NAME );
 	}
 
 	/**
@@ -79,55 +76,58 @@ class Cron {
 	 * @return void
 	 */
 	public function do_update_check() {
-		$options = $this->get_set_options( self::OPT_FIELD ); // get settings.
+		$settings = Settings::get_instance();
 
 		// Lets only do a check if one of the notification systems is set, if not, no one will get the message!
-		if ( 1 === $options['email_notifications'] || 1 === $options['slack_notifications'] ) {
-			$updates = []; // store all of the updates here.
-			if ( 0 !== $options['notify_automatic'] ) { // should we notify about core updates?
-				$updates['core'] = $this->core_update_check(); // check the WP core for updates.
-			} else {
-				$updates['core'] = false; // no core updates.
-			}
-			if ( 0 !== $options['notify_plugins'] ) { // are we to check for plugin updates?
-				$updates['plugin'] = $this->plugins_update_check(); // check for plugin updates.
-			} else {
-				$updates['plugin'] = false; // no plugin updates.
-			}
-			if ( 0 !== $options['notify_themes'] ) { // are we to check for theme updates?
-				$updates['theme'] = $this->themes_update_check(); // check for theme updates.
-			} else {
-				$updates['theme'] = false; // no theme updates.
-			}
-
-			/**
-			 * Filters the updates before they're parsed for sending.
-			 *
-			 * Change the updates array of core, plugins, and themes to be notified about.
-			 *
-			 * @since 1.6.1
-			 *
-			 * @param array  $updates Array of updates to notify about.
-			 */
-			$updates = apply_filters( 'sc_wpun_updates', $updates );
-
-			if ( ! empty( $updates['core'] ) || ! empty( $updates['plugin'] ) || ! empty( $updates['theme'] ) ) { // Did anything come back as need updating?
-
-				// Send email notification.
-				if ( 1 === $options['email_notifications'] ) {
-					$message = $this->prepare_message( $updates, self::MARKUP_VARS_EMAIL );
-					$this->send_email_message( $message );
-				}
-
-				// Send slack notification.
-				if ( 1 === $options['slack_notifications'] ) {
-					$message = $this->prepare_message( $updates, self::MARKUP_VARS_SLACK );
-					$this->send_slack_message( $message );
-				}
-			}
-
-			$this->log_last_check_time();
+		if ( ! ( 1 === $settings->get( 'email_notifications' ) || 1 === $settings->get( 'slack_notifications' ) ) ) {
+			return;
 		}
+
+		$updates = [
+			'core'   => false,
+			'plugin' => false,
+			'theme'  => false,
+		];
+
+		if ( 0 !== $settings->get( 'notify_automatic' ) ) {
+			$updates['core'] = $this->update_check();
+		}
+
+		if ( 0 !== $settings->get( 'notify_plugins' ) ) {
+			$updates['plugin'] = $this->update_check();
+		}
+
+		if ( 0 !== $settings->get( 'notify_themes' ) ) {
+			$updates['theme'] = $this->update_check();
+		}
+
+		/**
+		 * Filters the updates before they're parsed for sending.
+		 *
+		 * Change the updates array of core, plugins, and themes to be notified about.
+		 *
+		 * @since 1.6.1
+		 *
+		 * @param array  $updates Array of updates to notify about.
+		 */
+		$updates = apply_filters( 'sc_wpun_updates', $updates );
+
+		if ( ! empty( $updates['core'] ) || ! empty( $updates['plugin'] ) || ! empty( $updates['theme'] ) ) { // Did anything come back as need updating?
+
+			// Send email notification.
+			if ( 1 === $settings->get( 'email_notifications' ) ) {
+				$message = $this->prepare_message( $updates, self::MARKUP_VARS_EMAIL );
+				$this->send_email_message( $message );
+			}
+
+			// Send slack notification.
+			if ( 1 === $settings->get( 'slack_notifications' ) ) {
+				$message = $this->prepare_message( $updates, self::MARKUP_VARS_SLACK );
+				$this->send_slack_message( $message );
+			}
+		}
+
+		$this->log_last_check_time();
 	}
 
 	/**

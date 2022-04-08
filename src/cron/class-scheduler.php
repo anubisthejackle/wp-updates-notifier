@@ -20,8 +20,16 @@ class Scheduler {
 	 */
 	private static $instance;
 
+	/**
+	 * Restrict constructor to only being loadable via the get_instance method.
+	 */
+	private function __construct(){}
+
+	/**
+	 * Get the current instance of this class.
+	 */
 	public static function get_instance() {
-		if( ! ( self::$instance instanceof self ) ) {
+		if ( ! ( self::$instance instanceof self ) ) {
 			self::$instance = new self();
 		}
 

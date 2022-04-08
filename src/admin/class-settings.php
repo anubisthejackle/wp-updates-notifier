@@ -27,7 +27,7 @@ use Notifier\Settings\Validator\Slack_Webhook_Url;
  * and maintaining the actual settings submissions.
  */
 class Settings {
-	const OPT_FIELD         = 'sc_wpun_settings';
+	const OPT_FIELD = 'sc_wpun_settings';
 
 	/**
 	 * Initialize the Admin Settings options.

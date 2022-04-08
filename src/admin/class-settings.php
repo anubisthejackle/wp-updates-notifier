@@ -7,7 +7,7 @@
 
 namespace Notifier\Admin;
 
-use Notifier\Notifier\Email;
+use Notifier\Cron\Scheduler;
 use Notifier\Settings as SettingsContainer;
 use Notifier\Settings\Validator\Disabled_Plugins;
 use Notifier\Settings\Validator\Email_Notifications;
@@ -28,28 +28,6 @@ use Notifier\Settings\Validator\Slack_Webhook_Url;
  */
 class Settings {
 	const OPT_FIELD         = 'sc_wpun_settings';
-	const OPT_VERSION_FIELD = 'sc_wpun_settings_ver';
-	const OPT_VERSION       = '8.0';
-	const DEFAULT_SETTINGS  = [
-		'frequency'              => 'hourly',
-		'email_notifications'    => 0,
-		'notify_to'              => '',
-		'notify_from'            => '',
-		'slack_notifications'    => 0,
-		'slack_webhook_url'      => '',
-		'slack_channel_override' => '',
-		'disabled_plugins'       => [],
-		'notify_plugins'         => 1,
-		'notify_themes'          => 1,
-		'notify_automatic'       => 1,
-		'hide_updates'           => 1,
-		'notified'               => [
-			'core'   => '',
-			'plugin' => [],
-			'theme'  => [],
-		],
-		'last_check_time'        => false,
-	];
 
 	/**
 	 * Initialize the Admin Settings options.
@@ -298,17 +276,6 @@ class Settings {
 	 * @return void
 	 */
 	public function settings_page() {
-		// Trigger tests if they are ready to be sent.
-		$sc_wpun_send_test_slack = get_transient( 'sc_wpun_send_test_slack' );
-		if ( $sc_wpun_send_test_slack ) {
-			delete_transient( 'sc_wpun_send_test_slack' );
-			$this->send_test_slack( self::MARKUP_VARS_SLACK );
-		}
-		$sc_wpun_send_test_email = get_transient( 'sc_wpun_send_test_email' );
-		if ( $sc_wpun_send_test_email ) {
-			delete_transient( 'sc_wpun_send_test_email' );
-			$this->send_test_email( self::MARKUP_VARS_EMAIL );
-		}
 
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );
@@ -402,37 +369,14 @@ class Settings {
 	 * @return void
 	 */
 	public function sc_wpun_settings_main_field_frequency() {
-		$frequency = SettingsContainer::get_instance()->get( 'frequency' );
+		$settings = SettingsContainer::get_instance();
 		?>
-		<select id="sc_wpun_settings_main_frequency" name="<?php echo esc_attr( self::OPT_FIELD ); ?>[frequency]">
-		<?php foreach ( $this->get_schedules() as $k => $v ) : ?>
-			<option value="<?php echo esc_attr( $k ); ?>" <?php selected( $frequency, $k ); ?>><?php echo esc_html( $v['display'] ); ?></option>
+		<select id="sc_wpun_settings_main_frequency" name="<?php echo esc_attr( $settings->get_html_name( 'frequency' ) ); ?>">
+		<?php foreach ( Scheduler::get_instance()->get_schedules() as $k => $v ) : ?>
+			<option value="<?php echo esc_attr( $k ); ?>" <?php selected( $settings->get( 'frequency' ), $k ); ?>><?php echo esc_html( $v['display'] ); ?></option>
 		<?php endforeach; ?>
 		</select>
 		<?php
-	}
-
-	/**
-	 * Simple sort function.
-	 *
-	 * @param  int $a Integer for sorting.
-	 * @param  int $b Integer for sorting.
-	 *
-	 * @return int Frequency internval.
-	 */
-	private function sort_by_interval( $a, $b ) {
-		return $a['interval'] - $b['interval'];
-	}
-
-	/**
-	 * Get cron schedules.
-	 *
-	 * @return Array cron schedules.
-	 */
-	private function get_schedules() {
-		$schedules = wp_get_schedules();
-		uasort( $schedules, [ $this, 'sort_by_interval' ] );
-		return $schedules;
 	}
 
 	/**

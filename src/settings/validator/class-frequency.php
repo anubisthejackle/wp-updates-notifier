@@ -8,6 +8,7 @@
 namespace Notifier\Settings\Validator;
 
 use Notifier\Contracts\Validator;
+use Notifier\Cron\Scheduler;
 use Notifier\Settings;
 
 /**
@@ -23,7 +24,7 @@ class Frequency implements Validator {
 	 * @return mixed The input if valid, otherwise the stored setting.
 	 */
 	public function validate( $input, $valid = [] ) {
-		if ( in_array( $input, $this->get_intervals(), true ) ) {
+		if ( in_array( $input, Scheduler::get_instance()->get_intervals(), true ) ) {
 			return $input;
 		}
 
@@ -44,39 +45,5 @@ class Frequency implements Validator {
 		);
 
 		return Settings::get_instance()->get( 'frequency' );
-	}
-
-	/**
-	 * Get cron intervals.
-	 *
-	 * @return Array cron intervals.
-	 */
-	private function get_intervals() {
-		$intervals   = array_keys( $this->get_schedules() );
-		$intervals[] = 'manual';
-		return $intervals;
-	}
-
-	/**
-	 * Get cron schedules.
-	 *
-	 * @return Array cron schedules.
-	 */
-	private function get_schedules() {
-		$schedules = wp_get_schedules();
-		uasort( $schedules, [ $this, 'sort_by_interval' ] );
-		return $schedules;
-	}
-
-	/**
-	 * Simple sort function.
-	 *
-	 * @param  int $a Integer for sorting.
-	 * @param  int $b Integer for sorting.
-	 *
-	 * @return int Frequency internval.
-	 */
-	private function sort_by_interval( $a, $b ) {
-		return $a['interval'] - $b['interval'];
 	}
 }

@@ -7,6 +7,8 @@
 
 namespace Notifier;
 
+use Notifier\Cron\Scheduler;
+
 /**
  * The Cron class manages the scheduled tasks.
  */
@@ -49,7 +51,7 @@ class Cron {
 			}
 
 			// check the cron setting is valid.
-			if ( ! in_array( $options['frequency'], $this->get_intervals(), true ) ) {
+			if ( ! in_array( $options['frequency'], Scheduler::get_instance()->get_intervals(), true ) ) {
 				return;
 			}
 
@@ -137,16 +139,5 @@ class Cron {
 		$options                    = $this->get_set_options( self::OPT_FIELD );
 		$options['last_check_time'] = time();
 		$this->get_set_options( self::OPT_FIELD, $options );
-	}
-
-	/**
-	 * Get cron intervals.
-	 *
-	 * @return Array cron intervals.
-	 */
-	private function get_intervals() {
-		$intervals   = array_keys( $this->get_schedules() );
-		$intervals[] = 'manual';
-		return $intervals;
 	}
 }

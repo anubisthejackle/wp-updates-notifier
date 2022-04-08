@@ -364,23 +364,30 @@ class Settings {
 			check_admin_referer( 'sc_wpun_settings-options' );
 		}
 
+
+		$validators = [
+			'disabled_plugins'       => fn() => new Disabled_Plugins(),
+			'frequency'              => fn() => new Frequency(),
+			'notify_plugins'         => fn() => new Notify_Plugins(),
+			'notify_themes'          => fn() => new Notify_Themes(),
+			'notify_automatic'       => fn() => new Notify_Automatic(),
+			'hide_updates'           => fn() => new Hide_Updates(),
+			'email_notifications'    => fn() => new Email_Notifications(),
+			'notify_to'              => fn() => new Notify_To(),
+			'notify_from'            => fn() => new Notify_From(),
+			'slack_notifications'    => fn() => new Slack_Notifications(),
+			'slack_webhook_url'      => fn() => new Slack_Webhook_Url(),
+			'slack_channel_override' => fn() => new Slack_Channel_Override(),
+		];
+
 		$valid = [];
+		foreach( $validators as $name => $validator ){
+			if( ! isset( $input[ $name ] ) ){
+				continue;
+			}
 
-		// Validate main settings.
-		$valid['frequency']           = ( new Frequency() )->validate( $input['frequency'] );
-		$valid['notify_plugins']      = ( new Notify_Plugins() )->validate( $input['notify_plugins'] );
-		$valid['notify_themes']       = ( new Notify_Themes() )->validate( $input['notify_themes'] );
-		$valid['notify_automatic']    = ( new Notify_Automatic() )->validate( $input['notify_automatic'] );
-		$valid['hide_updates']        = ( new Hide_Updates() )->validate( $input['hide_updates'] );
-		$valid['notify_to']           = ( new Notify_To() )->validate( $input['notify_to'] );
-		$valid['notify_from']         = ( new Notify_From() )->validate( $input['notify_from'] );
-		$valid['email_notifications'] = ( new Email_Notifications() )->validate( $input['email_notifications'] );
-		$valid['disabled_plugins']    = ( new Disabled_Plugins() )->validate( $input['disabled_plugins'] );
-
-		// Validate slack settings.
-		$valid['slack_webhook_url']      = ( new Slack_Webhook_Url() )->validate( $input['slack_webhook_url'] );
-		$valid['slack_channel_override'] = ( new Slack_Channel_Override() )->validate( $input['slack_channel_override'] );
-		$valid['slack_notifications']    = ( new Slack_Notifications() )->validate( $input['slack_notifications'] );
+			$valid[ $name ] = $validator()->validate( $input[ $name ], $valid );
+		}
 
 		// Parse sending test notifiations.
 		if ( isset( $_POST['submitwithemail'] ) ) {
@@ -541,8 +548,11 @@ class Settings {
 	 */
 	public function sc_wpun_settings_email_notifications_field_notify_to() {
 		$settings = SettingsContainer::get_instance();
+		$emails = $settings->get( 'notify_to' );
+		$emails = ( ! empty( $emails ) ) ? implode( ',', $emails ) : '';
+
 		?>
-		<input id="sc_wpun_settings_email_notifications_notify_to" class="regular-text" name="<?php echo esc_attr( $settings->get_html_name( 'notify_to' ) ); ?>" value="<?php echo esc_attr( $settings->get( 'notify_to' ) ); ?>" />
+		<input id="sc_wpun_settings_email_notifications_notify_to" class="regular-text" name="<?php echo esc_attr( $settings->get_html_name( 'notify_to' ) ); ?>" value="<?php echo esc_attr( $emails ); ?>" />
 		<span class="description"><?php esc_html_e( 'Separate multiple email address with a comma (,)', 'wp-updates-notifier' ); ?></span>
 		<?php
 	}

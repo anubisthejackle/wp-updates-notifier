@@ -19,9 +19,10 @@ class Notify_Plugins implements Validator {
 	 * Method to validate the input value for this setting.
 	 *
 	 * @param mixed $input The input value of the setting.
-	 * @return mixed The input if valid, otherwise the existing setting.
+	 * @param array $valid The current valid inputs array.
+	 * @return mixed The input if valid, otherwise the stored setting.
 	 */
-	public function validate( $input ) {
+	public function validate( $input, $valid = [] ) {
 		$sanitized_input = isset( $input ) ? absint( $input ) : 0;
 
 		if ( $sanitized_input >= 0 && $sanitized_input <= 1 ) {

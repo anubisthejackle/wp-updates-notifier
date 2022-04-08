@@ -155,6 +155,6 @@ class Settings {
 	 * @return string The HTML element name.
 	 */
 	public function get_html_name( string $setting ): string {
-		return self::OPT_FIELD . '[notify_plugins]';
+		return self::OPT_FIELD . '[' . $setting . ']';
 	}
 }

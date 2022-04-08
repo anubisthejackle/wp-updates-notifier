@@ -18,9 +18,18 @@ class Slack_Channel_Override implements Validator {
 	 * Method to validate the input value for this setting.
 	 *
 	 * @param mixed $input The input value of the setting.
-	 * @return mixed The input if valid, otherwise the existing setting.
+	 * @param array $valid The current valid inputs array.
+	 * @return mixed The input if valid, otherwise the stored setting.
 	 */
-	public function validate( $input ) {
+	public function validate( $input, $valid = [] ) {
+		/**
+		 * If we don't have Slack notifications activated,
+		 * then we simply ignore this field.
+		 */
+		if ( empty( $valid['slack_notifications'] ) ) {
+			return '';
+		}
+
 		if ( '#' !== substr( $input, 0, 1 ) && '@' !== substr( $input, 0, 1 ) ) {
 			return $this->invalid_channel();
 		}

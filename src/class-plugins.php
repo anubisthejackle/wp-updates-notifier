@@ -26,14 +26,14 @@ class Plugins {
 	 * Filter for removing plugins from update list if already been notified about
 	 *
 	 * @param array $plugins_need_update Array of plugins that need an update.
-	 *
+	 * @param array $notified The array of plugins that have already had notifications sent.
 	 * @return array $plugins_need_update
 	 */
 	public function check_plugins_against_notified( $plugins_need_update, $notified ) {
 		foreach ( $plugins_need_update as $plugin => $data ) {
-            if (! isset($notified['plugin'][ $plugin ])) {
-                continue;
-            }
+			if ( ! isset( $notified['plugin'][ $plugin ] ) ) {
+				continue;
+			}
 
 			if ( $data->new_version === $notified['plugin'][ $plugin ] ) {
 				unset( $plugins_need_update[ $plugin ] );
@@ -85,7 +85,7 @@ class Plugins {
 		$plugins_need_update = $update_plugins->response;
 		$active_plugins      = get_option( 'active_plugins' );
 
-		if( ! is_array( $active_plugins ) ) {
+		if ( ! is_array( $active_plugins ) ) {
 			$active_plugins = [];
 		}
 
@@ -94,9 +94,9 @@ class Plugins {
 
 		$plugins_need_update = apply_filters( 'sc_wpun_plugins_need_update', $plugins_need_update, $notified );
 
-        if( empty( $plugins_need_update ) ) {
-            return false;
-        }
+		if ( empty( $plugins_need_update ) ) {
+			return false;
+		}
 
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php'; // Required for plugin API.
 

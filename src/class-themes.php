@@ -25,7 +25,7 @@ class Themes {
 	 * Filter for removing themes from update list if already been notified about
 	 *
 	 * @param array $themes_need_update Array of themes that need an update.
-	 *
+	 * @param array $notified The array of themes that have already had notifications sent.
 	 * @return array $themes_need_update
 	 */
 	public function check_themes_against_notified( $themes_need_update, $notified ) {
@@ -52,22 +52,22 @@ class Themes {
 
 		$update_themes = get_site_transient( 'update_themes' );
 		$theme_updates = [];
-		$notified = $settings->get( 'notified' );
+		$notified      = $settings->get( 'notified' );
 
 		if ( empty( $update_themes->response ) ) {
 			$notified['theme'] = [];
-			$settings->set('notified', $notified);
-            return false;
-        }
+			$settings->set( 'notified', $notified );
+			return false;
+		}
 
 		$themes_need_update = $update_themes->response;
 		$active_theme       = [ ( (string) get_option( 'template' ) ) => [] ];
 		$themes_need_update = array_intersect_key( $themes_need_update, $active_theme );
 		$themes_need_update = apply_filters( 'sc_wpun_themes_need_update', $themes_need_update, $notified );
 
-        if (empty($themes_need_update)) {
-            return false;
-        }
+		if ( empty( $themes_need_update ) ) {
+			return false;
+		}
 
 		foreach ( $themes_need_update as $theme => $data ) {
 			$theme_info      = wp_get_theme( $theme );

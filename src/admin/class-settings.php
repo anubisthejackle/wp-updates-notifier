@@ -337,8 +337,6 @@ class Settings {
 				?>
 				<p>&nbsp;</p>
 				<input class="button-primary" name="Submit" type="submit" value="<?php esc_attr_e( 'Save settings', 'wp-updates-notifier' ); ?>" />
-				<input class="button" name="submitwithemail" type="submit" value="<?php esc_attr_e( 'Save settings with test email', 'wp-updates-notifier' ); ?>" />
-				<input class="button" name="submitwithslack" type="submit" value="<?php esc_attr_e( 'Save settings with test slack post', 'wp-updates-notifier' ); ?>" />
 				<br><br>
 				<input class="button" name="restoredefaults" type="submit" value="<?php esc_attr_e( 'Restore Default Settings', 'wp-updates-notifier' ); ?>" />
 			</form>
@@ -387,23 +385,6 @@ class Settings {
 			}
 
 			$valid[ $name ] = $validator()->validate( $input[ $name ], $valid );
-		}
-
-		// Parse sending test notifiations.
-		if ( isset( $_POST['submitwithemail'] ) ) {
-			if ( '' !== $valid['notify_to'] && '' !== $valid['notify_from'] ) {
-				set_transient( 'sc_wpun_send_test_email', 1 );
-			} else {
-				add_settings_error( 'sc_wpun_settings_email_notifications_email_notifications', 'sc_wpun_settings_email_notifications_email_notifications_error', __( 'Can not send test email. Email settings are invalid.', 'wp-updates-notifier' ), 'error' );
-			}
-		}
-
-		if ( isset( $_POST['submitwithslack'] ) ) {
-			if ( '' !== $valid['slack_webhook_url'] ) {
-				set_transient( 'sc_wpun_send_test_slack', 1 );
-			} else {
-				add_settings_error( 'sc_wpun_settings_email_notifications_slack_notifications', 'sc_wpun_settings_email_notifications_slack_notifications_error', __( 'Can not post test slack message. Slack settings are invalid.', 'wp-updates-notifier' ), 'error' );
-			}
 		}
 
 		return $valid;

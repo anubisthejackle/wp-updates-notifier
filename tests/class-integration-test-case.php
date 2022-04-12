@@ -10,6 +10,7 @@ abstract class Integration_Test_Case extends Framework_Test_Case {
 	private static bool $installed = false;
 
 	public static function setUpBeforeClass(): void {
+		parent::setUpBeforeClass();
 		if( self::$installed ) {
 			return;
 		}

@@ -14,7 +14,18 @@
   },
   "require-dev": {
       "alleyinteractive/alley-coding-standards": "^0.3.0",
-      "yoast/phpunit-polyfills": "^1.0"
+      "phpunit/phpunit": "^9.0",
+      "mantle-framework/config": "dev-main as 0.1",
+      "mantle-framework/container": "dev-main as 0.1",
+      "mantle-framework/contracts": "dev-main as 0.1",
+      "mantle-framework/database": "dev-main as 0.1",
+      "mantle-framework/events": "dev-main as 0.1",
+      "mantle-framework/faker": "dev-main as 0.1",
+      "mantle-framework/testing": "dev-main as 0.1",
+      "mantle-framework/testkit": "dev-main as 0.1",
+      "mantle-framework/support": "dev-main as 0.1",
+      "mantle-framework/http": "dev-main as 0.1",
+      "mantle-framework/filesystem": "dev-main as 0.1"
   },
   "config": {
       "allow-plugins": {
@@ -25,7 +36,7 @@
   "scripts": {
     "phpcbf": "phpcbf --standard=./phpcs.xml.dist .",
     "phpcs": "phpcs --standard=./phpcs.xml.dist .",
-    "phpunit": "phpunit",
+    "phpunit": "./vendor/phpunit/phpunit/phpunit",
     "test": [
         "@phpcs",
         "@phpunit"

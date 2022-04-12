@@ -2,10 +2,10 @@
 
 namespace Notifier\Tests;
 
-use Mantle\Testing\Framework_Test_Case;
+use Mantle\Testkit\Test_Case;
 use function Mantle\Testing\tests_add_filter;
 
-abstract class Integration_Test_Case extends Framework_Test_Case {
+abstract class Integration_Test_Case extends Test_Case {
 
 	private static bool $installed = false;
 

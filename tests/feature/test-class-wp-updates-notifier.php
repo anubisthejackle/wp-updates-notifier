@@ -8,11 +8,13 @@
  * @subpackage Tests
  */
 
-namespace Notifier\Tests;
+namespace Notifier\Tests\Feature;
+
+use Notifier\Tests\Integration_Test_Case as TestCase;
 /**
  * A class which is used to test the SC_WP_Updates_Notifier class.
  */
-class SC_WP_Updates_Notifier_Tests extends Integration_Test_Case {
+class SC_WP_Updates_Notifier_Tests extends TestCase {
 
 	/**
 	 * Example test.

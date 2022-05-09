@@ -10,22 +10,22 @@
       }
   ],
   "require": {
-      "alleyinteractive/wordpress-autoloader": "^0.1.1"
+      "alleyinteractive/wordpress-autoloader": "^0.2"
   },
   "require-dev": {
       "alleyinteractive/alley-coding-standards": "^0.3.0",
       "phpunit/phpunit": "^9.0",
-      "mantle-framework/config": "dev-main as 0.1",
-      "mantle-framework/container": "dev-main as 0.1",
-      "mantle-framework/contracts": "dev-main as 0.1",
-      "mantle-framework/database": "dev-main as 0.1",
-      "mantle-framework/events": "dev-main as 0.1",
-      "mantle-framework/faker": "dev-main as 0.1",
-      "mantle-framework/testing": "dev-main as 0.1",
-      "mantle-framework/testkit": "dev-main as 0.1",
-      "mantle-framework/support": "dev-main as 0.1",
-      "mantle-framework/http": "dev-main as 0.1",
-      "mantle-framework/filesystem": "dev-main as 0.1"
+      "mantle-framework/config": "^0.1",
+      "mantle-framework/container": "^0.1",
+      "mantle-framework/contracts": "^0.1",
+      "mantle-framework/database": "^0.1",
+      "mantle-framework/events": "^0.1",
+      "mantle-framework/faker": "^0.1",
+      "mantle-framework/testing": "^0.1",
+      "mantle-framework/testkit": "^0.1",
+      "mantle-framework/support": "^0.1",
+      "mantle-framework/http": "^0.1",
+      "mantle-framework/filesystem": "^0.1"
   },
   "config": {
       "allow-plugins": {
